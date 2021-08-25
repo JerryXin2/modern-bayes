@@ -90,15 +90,48 @@ The content of that row is:
 0
 
 f.  What does the following command do?
-```
+```{r}
 names(rain.df) <- c("year","month","day",seq(0,23))
 ```
+
+The command relabels the columns to year, month, day, and then the hours from 0-23, because rainfall is collected hourly.
+
 g.  Create a new column called \texttt{daily}, which is the sum of the 24 hourly columns.
+```{r}
+rain.df <- rain.df%>%
+  mutate(daily = rowSums(.[4:27]))
+```
+
 h. Give the command you would use to create a histogram of the daily rainfall amounts.  Please make sure to attach your figures in your .pdf report. 
+
+```{r}
+ggplot(data = rain.df, aes(x = daily)) + 
+  geom_histogram() +
+  labs(x = "Daily Rainfall Amounts", 
+       title = "Distribution of daily rainfall amounts")
+```
+
 i. Explain why that histogram above cannot possibly be right.
+
+It cannot possibly be right because there seems to be 1 daily rainfall amount that is around -24000. It doesn't make sense for rain to fall at a negative amount.
+
 j. Give the command you would use to fix the data frame.
+
+```{r}
+rain.df <- rain.df%>%
+  filter(daily >= 0)
+```
+
 k. Create a corrected histogram and again include it as part of your submitted report. Explain why it is
 more reasonable than the previous histogram.
+
+```{r}
+ggplot(data = rain.df, aes(x = daily)) + 
+  geom_histogram() +
+  labs(x = "Daily Rainfall Amounts", 
+       title = "Distribution of daily rainfall amounts")
+```
+This is more reasonable because the lowest amount of daily rainfall is reasonably set at 0(on days which it doesn't rain). The histogram also doesn't have any extreme outliers.
 
 ***Data types***
 
