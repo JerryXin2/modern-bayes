@@ -43,6 +43,7 @@ a. Load the data set into R and make it a data frame called \texttt{rain.df}.  W
 ```{r}
 rain.df <- read.table("data/rnf6080.dat")
 ```
+**I used the read.table command to load the data in and make it a data frame**
 
 b. How many rows and columns does \texttt{rain.df} have?  How do you know?  (If there are not 5070 rows and 27 columns, you did something wrong in the first part of the problem.)
 ```{r}
@@ -69,14 +70,14 @@ d. What command would you use to get the value at row 2, column 4? What is the v
 ```{r}
 rain.df[2,4]
 ```
-**Use rain.df[2,4]. The value is 0**
+**I used rain.df[2,4]. The value is 0**
 
 
 e. What command would you use to display the whole second row?  What is the content of that row?
 ```{r}
 rain.df[2, ]
 ```
-**Use rain.df[2, ]. **
+**I used rain.df[2, ]. **
 **The content of that row is: **
 **60
 4
@@ -119,6 +120,7 @@ g.  Create a new column called \texttt{daily}, which is the sum of the 24 hourly
 rain.df <- rain.df%>%
   mutate(daily = rowSums(.[4:27]))
 ```
+**I summed the 4th through 27th columns to create a new column daily**
 
 h. Give the command you would use to create a histogram of the daily rainfall amounts.  Please make sure to attach your figures in your .pdf report. 
 
@@ -141,6 +143,7 @@ j. Give the command you would use to fix the data frame.
 rain.df <- rain.df%>%
   filter(daily >= 0)
 ```
+**I filtered the data by values greater than 0 using filter.**
 
 k. Create a corrected histogram and again include it as part of your submitted report. Explain why it is
 more reasonable than the previous histogram.
