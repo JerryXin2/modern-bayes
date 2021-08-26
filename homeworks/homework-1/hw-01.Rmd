@@ -46,15 +46,15 @@ rain.df <- read.table("data/rnf6080.dat")
 
 b. How many rows and columns does \texttt{rain.df} have?  How do you know?  (If there are not 5070 rows and 27 columns, you did something wrong in the first part of the problem.)
 ```{r}
-dim(rain.df)[1]
-dim(rain.df)[2]
+nrow(rain.df)
+ncol(rain.df)
 ```
 
 
 **rain.df has 5070 rows and 27 columns, because it has 5070 observations of 27**
 **variables. The 5070 observations of 27 variables is shown in the environment tab**
-**, and dim(rain.df)[1] gets the amount of rows and dim(rain.df)[2] gets number of** 
-**columns**
+**, and nrow(rain.df) gets the amount of rows, 5070, and ncol(rain.df) gets number of** 
+**columns, 27**
 
 c. What command would you use to get the names of the columns of \texttt{rain.df}? What are those names?
 ```{r}
@@ -67,16 +67,16 @@ colnames(rain.df)
 
 d. What command would you use to get the value at row 2, column 4? What is the value?
 ```{r}
-view(rain.df[2,"V4"])
+rain.df[2,4]
 ```
-**Use view(rain.df[2,"V4"]). The value is 0**
+**Use rain.df[2,4]. The value is 0**
 
 
 e. What command would you use to display the whole second row?  What is the content of that row?
 ```{r}
-view(rain.df[2, ])
+rain.df[2, ]
 ```
-**Use view(rain.df[2, ]). **
+**Use rain.df[2, ]. **
 **The content of that row is: **
 **60
 4
