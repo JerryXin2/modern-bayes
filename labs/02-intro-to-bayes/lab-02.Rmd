@@ -55,14 +55,25 @@ You have a rough sketch of what you should do for this part of the assignment. T
 
 ```{r, echo = TRUE}
 ### Bernoulli LH Function ###
+
 # Input: obs.data, theta
 # Output: bernoulli likelihood
+
+myBernLH <- function(obs.data, theta){
+  N <- length(obs.data)
+  x <- sum(obs.data)
+  LH <- (theta^x) * ((1-theta)^(N-x))
+  return(LH)
+}
 
 
 ### Plot LH for a grid of theta values ###
 # Create the grid #
 # Store the LH values
 # Create the Plot
+theta.sim <- seq(from = 0, to = 1, length.out = 1000)
+sim.LH <- myBernLH(obs.data, theta = theta.sim)
+plot(theta.sim, sim.LH, type ="line", main = "Likelihood Profile", xlab = "Simulated Support", ylab = "Likelihood")
 ```
 
 
@@ -71,8 +82,68 @@ You have a rough sketch of what you should do for this part of the assignment. T
 
 Write a function that takes as its inputs  prior parameters \textsf{a} and \textsf{b} for the Beta-Bernoulli model and the observed data, and produces the posterior parameters you need for the model. \textbf{Generate and print} the posterior parameters for a non-informative prior i.e. \textsf{(a,b) = (1,1)} and for an informative case \textsf{(a,b) = (3,1)}}.
 
+```{r}
+posterior <- function(priorA, priorB, obs.data)
+{
+  N <- length(obs.data)
+  x <- sum(obs.data)
+  postA <- priorA + x
+	postB <- priorB + N - x
+	postparam <- list('postA' = postA, 
+	 'postB' = postB)
+	return(postparam)
+}
+```
+
+```{r}
+nonInformative <- posterior(priorA = 1, priorB = 1, obs.data = obs.data)
+informative <- posterior(priorA = 3, priorB = 1, obs.data = obs.data)
+print(c(nonInformative, informative))
+```
+
+
+
 
 
 # Task 5 (To be completed for homework)
 
 Create two plots, one for the informative and one for the non-informative case to show the posterior distribution and superimpose the prior distributions on each along with the likelihood. What do you see? Remember to turn the y-axis ticks off since superimposing may make the scale non-sense.
+```{r}
+nonInformativeDen <- dbeta(x = theta.sim, shape1 = nonInformative$postA, 
+ shape2 =nonInformative$postB)
+informativeDen <- dbeta(x = theta.sim, shape1 = informative$postA, 
+ shape2 = informative$postB)
+priorInform <- dbeta(x = theta.sim, shape1 = 3, 
+ shape2 = 1)
+priorNonInform <- dbeta(x = theta.sim, shape1 = 1, 
+ shape2 = 1)
+
+par(mfrow=c(1, 2)) 
+plot(theta.sim, sim.LH, lty = 2, xlab = 'Simulated Thetas',
+ ylab = 'Density/LH', type = 'l', yaxt = 'n', main = 'Informative',
+ , col = c("red"))
+par(new = TRUE)
+plot(theta.sim, informativeDen, lty = 1, axes = FALSE, xlab = '', ylab = '',
+ type = 'l', , col = c("green"))
+par(new = TRUE)
+plot(theta.sim, priorInform, lty = 3, axes = FALSE, xlab = '', ylab = '',
+ type = 'l', col = c("blue"))
+legend('topright', lty=c(2,1,3), legend = c('LH', 'Posterior', 'Prior'),
+       col = c("red", "green", "blue"), cex = 0.5)
+
+plot(theta.sim, sim.LH, lty = 2, xlab = 'Simulated Thetas',
+ ylab = 'Density/LH', type = 'l', yaxt = 'n', main = 'Non-informative', 
+ col = c("red"))
+par(new = TRUE)
+plot(theta.sim, nonInformativeDen, lty = 1, axes = FALSE, xlab = '', ylab = '',
+ type = 'l', col = c("green"))
+par(new = TRUE)
+plot(theta.sim, priorNonInform, lty = 3, axes = FALSE, xlab = '', ylab = '',
+ type = 'l', col = c("blue"))
+legend('topright', lty=c(2,1,3), legend = c('LH', 'Posterior', 'Prior'), 
+       col = c("red", "green", "blue"), cex=0.5)
+
+```
+These graphs both show the posterior distribution is a result of combining the Likelihood and the Prior. It is graphically seen as an average between the Likelihood and Prior. A non-informative prior is graphically seen as a flat line and seems to have less effect on the posterior than a prior which is informative, which is graphically a upwards sloping curve, and is shown to have a larger effect on moving the posterior rightwards.
+
+
