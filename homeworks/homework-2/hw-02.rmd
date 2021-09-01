@@ -145,7 +145,7 @@ $$\theta\exp(-\theta x)\theta^{a-1}\exp(-b\theta)$$
 
 $$\theta^{a}\exp(-\theta *(b + x))$$
 $$\Ga(\theta|a+1,b + x)$$
-The posterior is a Gamma Distribution with Gamma(a+1, bx).
+The posterior is a Gamma Distribution with Gamma(a + 1, b + x).
 
 \item (5) Why is the posterior distribution a \emph{proper} density or probability distribution function? \
 The posterior distribution is a proper density, or probability distribution function, because it integrates to 1, which means the area under the function adds up to 1.
