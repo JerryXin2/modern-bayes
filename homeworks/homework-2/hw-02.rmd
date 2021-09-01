@@ -216,7 +216,7 @@ $$E[Y^2] = \frac{a}{\theta^2}.$$
 
 Let the prior also be a Galenshore($c, $d)  distribution:
 $$p(\theta) = \frac{2}{\Gamma(c)} \; d^{2c} \theta^{2c - 1} e^{-d^2 \theta^2}$$
-The likelihood is:
+The likelihood a Galenshore($a, \theta$)  distribution:
 $$p(y) = \frac{2}{\Gamma(a)} \; \theta^{2a} y^{2a - 1} e^{-\theta^2 y^2}$$
 Because you have $\theta^{2a}$ , and $e^{-\theta^2 y^2}$, only a Galenshore distribution would work as a conjugate prior density.
 ```{r}
