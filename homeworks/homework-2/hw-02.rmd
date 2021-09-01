@@ -23,6 +23,17 @@ library(broom)
 (b) (10) Task 4
 (c) (10) Task 5
 
+```{r,echo=TRUE}
+# set a seed
+set.seed(123)
+# create the observed data
+obs.data <- rbinom(n = 100, size = 1, prob = 0.01)
+# inspect the observed data
+head(obs.data)
+tail(obs.data)
+length(obs.data)
+```
+
 # Task 3
 
 Write a function that takes as its inputs that data you simulated (or any data of the same type) and a sequence of $\theta$ values of length 1000 and produces Likelihood values based on the Binomial Likelihood. Plot your sequence and its corresponding Likelihood function.
@@ -129,10 +140,22 @@ $$ p(\theta) = \Ga(\theta|a,b) = \frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)
 
 \begin{enumerate}
 \item (5) Derive the formula for the posterior density, $p(\theta|x_{1:n})$. Give the form of the posterior in terms of one of the most common distributions (Bernoulli, Beta, Exponential, or Gamma).
-\item (5) Why is the posterior distribution a \emph{proper} density or probability distribution function? 
+
+$$\theta\exp(-\theta x)\theta^{a-1}\exp(-b\theta)$$
+
+$$\theta^{a}\exp(-b\theta x)$$
+$$\Ga(\theta|a+1,bx)$$
+The posterior is a Gamma Distribution with Gamma(a+1, bx).
+
+\item (5) Why is the posterior distribution a \emph{proper} density or probability distribution function? \
+The posterior distribution is a proper density, or probability distribution function, because it integrates to 1, which means the area under the function adds up to 1.
+
 \item (5) Now, suppose you are measuring the number of seconds between lightning strikes during a storm, your prior is $\Ga(0.1,1.0)$, and your data is
 $$(x_1,\dotsc,x_8) = (20.9, 69.7, 3.6, 21.8, 21.4, 0.4, 6.7, 10.0).$$
 Plot the prior and posterior p.d.f.s. (Be sure to make your plots on a scale that allows you to clearly see the important features.)
+
+
+
 \item (5) Give a specific example of an application where an Exponential model would be reasonable. Give an example where an Exponential model would NOT be appropriate, and explain why.
 \end{enumerate}
 
