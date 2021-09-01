@@ -143,8 +143,8 @@ $$ p(\theta) = \Ga(\theta|a,b) = \frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)
 
 $$\theta\exp(-\theta x)\theta^{a-1}\exp(-b\theta)$$
 
-$$\theta^{a}\exp(-b\theta x)$$
-$$\Ga(\theta|a+1,bx)$$
+$$\theta^{a}\exp(-\theta *(b + x))$$
+$$\Ga(\theta|a+1,b + x)$$
 The posterior is a Gamma Distribution with Gamma(a+1, bx).
 
 \item (5) Why is the posterior distribution a \emph{proper} density or probability distribution function? \
@@ -154,10 +154,55 @@ The posterior distribution is a proper density, or probability distribution func
 $$(x_1,\dotsc,x_8) = (20.9, 69.7, 3.6, 21.8, 21.4, 0.4, 6.7, 10.0).$$
 Plot the prior and posterior p.d.f.s. (Be sure to make your plots on a scale that allows you to clearly see the important features.)
 
+```{r,echo=TRUE}
+# set a seed
+set.seed(123)
+# create the observed data
+obs.data2 <- c(20.9, 69.7, 3.6, 21.8, 21.4, 0.4, 6.7, 10.0)
+# inspect the observed data
+head(obs.data2)
+tail(obs.data2)
+length(obs.data2)
+```
+```{r}
+posterior2 <- function(priorA, priorB, obs.data)
+{
+  N <- length(obs.data)
+  x <- sum(obs.data)
+  postA <- priorA + 1
+	postB <- priorB + x
+	postparam <- list('postA' = postA, 
+	 'postB' = postB)
+	return(postparam)
+}
+```
+
+```{r}
+informative1<- posterior2(priorA = 0.1, priorB = 1.0, obs.data = obs.data)
+print(c(informative))
+```
+```{r}
+informativeDen1 <- dgamma(x = theta.sim, shape = informative1$postA, 
+ rate = informative1$postB)
+priorInform1 <- dgamma(x = theta.sim, shape = 0.1, 
+ rate = 1)
+
+plot(theta.sim, informativeDen, lty = 1, axes = FALSE, xlab = '', ylab = '',
+ type = 'l', , col = c("green"))
+par(new = TRUE)
+plot(theta.sim, priorInform, lty = 3, axes = FALSE, xlab = '', ylab = '',
+ type = 'l', col = c("blue"))
+legend('topright', lty=c(2,1,3), legend = c('LH', 'Posterior', 'Prior'),
+       col = c("red", "green", "blue"), cex = 0.5)
+```
 
 
 \item (5) Give a specific example of an application where an Exponential model would be reasonable. Give an example where an Exponential model would NOT be appropriate, and explain why.
 \end{enumerate}
+
+Exponential functions assuming a constant multiplicative rate of change, so a specific application would be studying a bacteria in a petri dish that undergoes binary fission(splits into 2 identical replicas). The constant multiplicative rate of change here would be 2, and would not change from 2 ever. An example where the exponential model would not be appropiate is modeling the stock market, as there is not anywhere close to a constant rate of change in the stock market, which is highly unpredictable and consists of lots of valleys and peaks, not to mention recessions and economic stagnation. There is no constant multiplicative rate of change here.
+
+Constant Rate Assumption with the Exponential Model, time in between events. Assuming constant time in between events.
 
 \item (40 points total) {\em Priors, Posteriors, Predictive Distributions (Hoff, 3.9)}
 An unknown quantity $Y$ has a Galenshore($a, \theta$) distribution if its density is given by 
@@ -168,8 +213,38 @@ $$E[Y^2] = \frac{a}{\theta^2}.$$
 
 \begin{enumerate}
 \item (10) Identify a class of conjugate prior densities for $\theta$. \textcolor{red}{Assume the prior parameters are $c$ and $d.$} Plot a few members of this class of densities.
+
+Let the prior also be a Galenshore($c, $d)  distribution:
+$$p(\theta) = \frac{2}{\Gamma(c)} \; d^{2c} \theta^{2c - 1} e^{-d^2 \theta^2}$$
+The likelihood is:
+$$p(y) = \frac{2}{\Gamma(a)} \; \theta^{2a} y^{2a - 1} e^{-\theta^2 y^2}$$
+Because you have $\theta^{2a}$ , and $e^{-\theta^2 y^2}$, only a Galenshore distribution would work as a conjugate prior density.
+```{r}
+dgalenshore <- function(theta, c, d) {
+    # takes numeric vector (elements should be >0) and returns the galenshore
+    # probability density at each point. Parameters a and theta should all be
+    # > 0.
+    if (any(theta <= 0) || any(c <= 0) || any(d <= 0)) {
+        stop("Invalid parameters or input values. Inputs must be >0")
+    } else {
+        return((2/gamma(c)) * d^(2 * c) * exp(-d^2 * theta^2))
+    }
+}
+x <- seq(0.01, 3, 0.01)
+plot(x, dgalenshore(x, 1, 1), type = "l", ylab = "Galenshore Density(x)", col = "black", 
+    ylim = c(0, 5), lwd = 2)
+lines(x, dgalenshore(x, 1, 1.5), type = "l", col = "red", lwd = 2, lty = 2)
+lines(x, dgalenshore(x, 3, 1), type = "l", col = "blue", lwd = 2, lty = 3)
+legend("topright", c("Galenshore(1,1)", "Galenshore(1,2)", "Galenshore(3,1)"), 
+    col = c("black", "red", "blue"), lwd = c(2, 2, 2), lty = c(1, 2, 3))
+```
+
 \item (5) Let $Y_1, \ldots, Y_n \stackrel{iid}{\sim}$ Galenshore($a, \theta$). Find the posterior distribution of $\theta \mid y_{1:n}$ using a prior from your conjugate class. 
+You have a sample of ys, $y_{1:n}$
+
 \item (10) Write down $$\frac{p(\theta_a \mid y_{1:n})}{p(\theta_b \mid y_{1:n})}$$ and simplify. Identify a sufficient statistic. 
+Compared the ratio of 2 different likelihood distributions, one has parameter a and one has parameter b. Normalizing constants will cancel out, some simplification.
+
 \item (5) Determine $E[\theta \mid y_{1:n}]$.
 \item (10) Show that the form of the posterior predictive density $$p(y_{n+1} \mid y_{1:n}) =  \frac{2 y_{n+1}^{2a - 1} \Gamma(an + a + c)}{\Gamma(a)\Gamma(an + c)}
 \frac{(d^2 + \sum y_i^2)^{an + c}}{(d^2 + \sum y_i^2 + y_{n+1}^2)^{(an + a + c)}}.$$
