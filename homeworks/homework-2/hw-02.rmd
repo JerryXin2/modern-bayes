@@ -1,5 +1,5 @@
 ---
-title: 'Data Wrangling in \texttt{R}'
+title: 'Homework #2 STA 360'
 author: "Jerry Xin STA 360: Homework 2"
 date: "Due Friday September 3rd, 5 PM EDT"
 output: pdf_document
