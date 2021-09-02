@@ -2,7 +2,10 @@
 title: 'Homework #2 STA 360'
 author: "Jerry Xin STA 360: Homework 2"
 date: "Due Friday September 3rd, 5 PM EDT"
-output: pdf_document
+output:
+  pdf_document: 
+    fig_height: 4
+    fig_width: 6
 ---
 
 ```{r setup, echo = F}
@@ -64,6 +67,7 @@ theta.sim <- seq(from = 0, to = 1, length.out = 1000)
 sim.LH <- myBernLH(obs.data, theta = theta.sim)
 plot(theta.sim, sim.LH, type ="line", main = "Likelihood Profile", xlab = "Simulated Support", ylab = "Likelihood")
 ```
+
 # Task 4 (To be completed for homework)
 
 Write a function that takes as its inputs  prior parameters \textsf{a} and \textsf{b} for the Beta-Bernoulli model and the observed data, and produces the posterior parameters you need for the model. \textbf{Generate and print} the posterior parameters for a non-informative prior i.e. \textsf{(a,b) = (1,1)} and for an informative case \textsf{(a,b) = (3,1)}}.
@@ -130,46 +134,42 @@ legend('topright', lty=c(2,1,3), legend = c('LH', 'Posterior', 'Prior'),
 
 These graphs both show the posterior distribution is a result of combining the Likelihood and the Prior. It is graphically seen as an average between the Likelihood and Prior. A non-informative prior is graphically seen as a flat line and seems to have less/ almost neglible effect on the posterior, as it seems to have no effect on the posterior graph. The effect is less when compared to a prior which is informative, which is graphically a upwards sloping curve, and is shown to have a larger effect on moving the posterior rightwards.
 
-\item (20  points total) {\em The Exponential-Gamma Model}
-We write $X\sim\Exp(\theta)$ to indicate that $X$ has the Exponential distribution, that is, its p.d.f.\ is
-$$ p(x|\theta) =\Exp(x|\theta) = \theta\exp(-\theta x)\I(x>0). $$
+# 2. (20  points total) The Exponential-Gamma Model
+We write $XExp(\theta)$ to indicate that $X$ has the Exponential distribution, that is, its p.d.f. is
+$$ p(x|\theta) =Exp(x|\theta) = \theta\exp(-\theta x) (x>0). $$
 The Exponential distribution has some special properties that make it a good model for certain applications. It has been used to model the time between events (such as neuron spikes, website hits, neutrinos captured in a detector), extreme values such as maximum daily rainfall over a period of one year, or the amount of time until a product fails (lightbulbs are a standard example).
 
-Suppose you have data $x_1,\dotsc,x_n$ which you are modeling as i.i.d.\ observations from an Exponential distribution, and suppose that your prior is $\btheta\sim\Ga(a,b)$, that is,
-$$ p(\theta) = \Ga(\theta|a,b) = \frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta) \I(\theta>0).$$
+Suppose you have data $x_1,\dotsc,x_n$ which you are modeling as i.i.d.\ observations from an Exponential distribution, and suppose that your prior is $\theta Ga(a,b)$, that is,
+$$ p(\theta) = Ga(\theta|a,b) = \frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta).$$
 $$\theta^{n}\exp(-\theta \sum{x_i})\frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)$$
 Remove $\frac{b^a}{\Gamma(a)}$ because it doesn't have theta and can be treated as a constant to get:
 $$\theta^{n}\exp(-\theta \sum{x})\theta^{a-1}\exp(-b\theta)$$
 
 Simplify to get:
 $$\theta^{a + n -1}\exp(-\theta *(b + \sum{x}))$$
-$$\Ga(\theta|a+n,b + \sum{x})$$
+$$Ga(\theta|a+n,b + \sum{x})$$
 The posterior is a Gamma Distribution with Gamma(a + n, b + sum(x)).
 
-\begin{enumerate}
-\item (5) Derive the formula for the posterior density, $p(\theta|x_{1:n})$. Give the form of the posterior in terms of one of the most common distributions (Bernoulli, Beta, Exponential, or Gamma).
+# (a) (5) Derive the formula for the posterior density, $p(\theta|x_{1:n})$. Give the form of the posterior in terms of one of the most common distributions (Bernoulli, Beta, Exponential, or Gamma).
 
 $$\theta^{n}\exp(-\theta \sum{x_i})\frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)$$
 Remove $\frac{b^a}{\Gamma(a)}$ because it doesn't have theta and can be treated as a constant to get:
 $$\theta^{n}\exp(-\theta \sum{x})\theta^{a-1}\exp(-b\theta)$$
 Simplify to get:
 $$\theta^{a + n -1}\exp(-\theta *(b + \sum{x}))$$
-$$\Ga(\theta|a+n,b + \sum{x})$$
+$$Ga(\theta|a+n,b + \sum{x})$$
 The posterior is a Gamma Distribution with Gamma(a + n, b + sum(x)).
 
-\item (5) Why is the posterior distribution a \emph{proper} density or probability distribution function? \
+# (b) (5) Why is the posterior distribution a \emph{proper} density or probability distribution function? \
 The posterior distribution is a proper density, or probability distribution function, because it integrates to 1, which means the area under the function adds up to 1.
 
-\item (5) Now, suppose you are measuring the number of seconds between lightning strikes during a storm, your prior is $\Ga(0.1,1.0)$, and your data is
+# (c) (5) Now, suppose you are measuring the number of seconds between lightning strikes during a storm, your prior is $Ga(0.1,1.0)$, and your data is
 $$(x_1,\dotsc,x_8) = (20.9, 69.7, 3.6, 21.8, 21.4, 0.4, 6.7, 10.0).$$
 Plot the prior and posterior p.d.f.s. (Be sure to make your plots on a scale that allows you to clearly see the important features.)
 
 ```{r,echo=TRUE}
-# set a seed
 set.seed(123)
-# create the observed data
 obs.data2 <- c(20.9, 69.7, 3.6, 21.8, 21.4, 0.4, 6.7, 10.0)
-# inspect the observed data
 head(obs.data2)
 tail(obs.data2)
 length(obs.data2)
@@ -208,22 +208,21 @@ legend('topright', lty=c(2,1,3), legend = c( 'Posterior', 'Prior'),
 ```
 
 
-\item (5) Give a specific example of an application where an Exponential model would be reasonable. Give an example where an Exponential model would NOT be appropriate, and explain why.
-\end{enumerate}
+# (d) (5) Give a specific example of an application where an Exponential model would be reasonable. Give an example where an Exponential model would NOT be appropriate, and explain why.
 
-Exponential functions assuming a constant multiplicative rate of change, so a specific application would be studying a bacteria in a petri dish that undergoes binary fission(splits into 2 identical replicas). The constant multiplicative rate of change here would be 2, and would not change from 2 ever. An example where the exponential model would not be appropiate is modeling the stock market, as there is not anywhere close to a constant rate of change in the stock market, which is highly unpredictable and consists of lots of valleys and peaks, not to mention recessions and economic stagnation. There is no constant multiplicative rate of change here.
 
-Constant Rate Assumption with the Exponential Model, time in between events. Assuming constant time in between events.
+Exponential functions assuming a constant multiplicative rate of change, so a specific application would be studying a lightbulb, which has the memorylessness property of an exponential distribution there is also a constant multiplicative rate of change here, 2. An example where the exponential model would not be appropiate is modeling the risk of death, because it doesn't have the property of memorylessness, and there is not a constant multiplication rate of change here. The probability is relatively close to 0 for young people from 0-40 years old, but skyrockets when people grow older and will level out at around 1 for those who get older and older.
 
-\item (40 points total) {\em Priors, Posteriors, Predictive Distributions (Hoff, 3.9)}
+Constant Rate Assumption with the Exponential Model, time in between events. Assuming constant time in between events, memorylessness property.
+
+# 3. (40 points total) { Priors, Posteriors, Predictive Distributions (Hoff, 3.9)}
 An unknown quantity $Y$ has a Galenshore($a, \theta$) distribution if its density is given by 
 $$p(y) = \frac{2}{\Gamma(a)} \; \theta^{2a} y^{2a - 1} e^{-\theta^2 y^2}$$
 for $y>0, \theta >0, a>0.$ Assume for now that $a$ is known. For this density, 
 $$E[Y] = \frac{\Gamma(a +1/2)}{\theta \Gamma(a)}$$ and 
 $$E[Y^2] = \frac{a}{\theta^2}.$$
 
-\begin{enumerate}
-\item (10) Identify a class of conjugate prior densities for $\theta$. \textcolor{red}{Assume the prior parameters are $c$ and $d.$} Plot a few members of this class of densities.
+# (a) (10) Identify a class of conjugate prior densities for $\theta$. \textcolor{red}{Assume the prior parameters are $c$ and $d.$} Plot a few members of this class of densities.
 
 Let the prior also be a Galenshore($c, $d)  distribution:
 $$p(\theta) = \frac{2}{\Gamma(c)} \; d^{2c} \theta^{2c - 1} e^{-d^2 \theta^2}$$
@@ -250,17 +249,17 @@ legend("topright", c("Galenshore(1,1)", "Galenshore(1,2)", "Galenshore(3,1)"),
     col = c("black", "red", "blue"), lwd = c(2, 2, 2), lty = c(1, 2, 3))
 ```
 
-\item (5) Let $Y_1, \ldots, Y_n \stackrel{iid}{\sim}$ Galenshore($a, \theta$). Find the posterior distribution of $\theta \mid y_{1:n}$ using a prior from your conjugate class. 
+# (b) (5) Let $Y_1, \ldots, Y_n \stackrel{iid}{\sim}$ Galenshore($a, \theta$). Find the posterior distribution of $\theta \mid y_{1:n}$ using a prior from your conjugate class. 
 You have a sample of ys, $y_{1:n}$ 
 See attached document.
 
-\item (10) Write down $$\frac{p(\theta_a \mid y_{1:n})}{p(\theta_b \mid y_{1:n})}$$ and simplify. Identify a sufficient statistic. 
+# (c) (10) Write down $$\frac{p(\theta_a \mid y_{1:n})}{p(\theta_b \mid y_{1:n})}$$ and simplify. Identify a sufficient statistic. 
 Compared the ratio of 2 different likelihood distributions, one has parameter a and one has parameter b. Normalizing constants will cancel out, some simplification.
 See Attached document.
 
-\item (5) Determine $$E[\theta \mid y_{1:n}]$$.
+# (d) (5) Determine $$E[\theta \mid y_{1:n}]$$.
 See Attached Document
 
-\item (10) Show that the form of the posterior predictive density $$p(y_{n+1} \mid y_{1:n}) =  \frac{2 y_{n+1}^{2a - 1} \Gamma(an + a + c)}{\Gamma(a)\Gamma(an + c)}
+# (e) (10) Show that the form of the posterior predictive density $$p(y_{n+1} \mid y_{1:n}) =  \frac{2 y_{n+1}^{2a - 1} \Gamma(an + a + c)}{\Gamma(a)\Gamma(an + c)}
 \frac{(d^2 + \sum y_i^2)^{an + c}}{(d^2 + \sum y_i^2 + y_{n+1}^2)^{(an + a + c)}}.$$
 See Attached Document.
