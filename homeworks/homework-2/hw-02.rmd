@@ -128,7 +128,7 @@ legend('topright', lty=c(2,1,3), legend = c('LH', 'Posterior', 'Prior'),
 ```
 
 
-These graphs both show the posterior distribution is a result of combining the Likelihood and the Prior. It is graphically seen as an average between the Likelihood and Prior. A non-informative prior is graphically seen as a flat line and seems to have less effect on the posterior than a prior which is informative, which is graphically a upwards sloping curve, and is shown to have a larger effect on moving the posterior rightwards.
+These graphs both show the posterior distribution is a result of combining the Likelihood and the Prior. It is graphically seen as an average between the Likelihood and Prior. A non-informative prior is graphically seen as a flat line and seems to have less/ almost neglible effect on the posterior, as it seems to have no effect on the posterior graph. The effect is less when compared to a prior which is informative, which is graphically a upwards sloping curve, and is shown to have a larger effect on moving the posterior rightwards.
 
 \item (20  points total) {\em The Exponential-Gamma Model}
 We write $X\sim\Exp(\theta)$ to indicate that $X$ has the Exponential distribution, that is, its p.d.f.\ is
@@ -141,8 +141,10 @@ $$ p(\theta) = \Ga(\theta|a,b) = \frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)
 \begin{enumerate}
 \item (5) Derive the formula for the posterior density, $p(\theta|x_{1:n})$. Give the form of the posterior in terms of one of the most common distributions (Bernoulli, Beta, Exponential, or Gamma).
 
+$$\theta\exp(-\theta x)\frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)$$
+Remove $\frac{b^a}{\Gamma(a)}$ because it doesn't have theta and can be treated as a constant to get:
 $$\theta\exp(-\theta x)\theta^{a-1}\exp(-b\theta)$$
-
+Simplify to get:
 $$\theta^{a}\exp(-\theta *(b + x))$$
 $$\Ga(\theta|a+1,b + x)$$
 The posterior is a Gamma Distribution with Gamma(a + 1, b + x).
@@ -167,9 +169,10 @@ length(obs.data2)
 ```{r}
 posterior2 <- function(priorA, priorB, obs.data)
 {
-  N <- length(obs.data)
-  x <- sum(obs.data)
+  N <- length(obs.data2)
+  x <- sum(obs.data2)
   postA <- priorA + 1
+  ## replace x with 1?^
 	postB <- priorB + x
 	postparam <- list('postA' = postA, 
 	 'postB' = postB)
@@ -178,19 +181,20 @@ posterior2 <- function(priorA, priorB, obs.data)
 ```
 
 ```{r}
-informative1<- posterior2(priorA = 0.1, priorB = 1.0, obs.data = obs.data)
+informative1<- posterior2(priorA = 0.1, priorB = 1.0, obs.data = obs.data2)
 print(c(informative))
+gamma.sim <- seq(0, 2, by = 0.04)
 ```
 ```{r}
-informativeDen1 <- dgamma(x = theta.sim, shape = informative1$postA, 
+informativeDen1 <- dgamma(x = gamma.sim, shape = informative1$postA, 
  rate = informative1$postB)
-priorInform1 <- dgamma(x = theta.sim, shape = 0.1, 
+priorInform1 <- dgamma(x = gamma.sim, shape = 0.1, 
  rate = 1)
 
-plot(theta.sim, informativeDen, lty = 1, axes = FALSE, xlab = '', ylab = '',
+plot(gamma.sim, informativeDen1, lty = 1, axes = FALSE, xlab = '', ylab = '',
  type = 'l', , col = c("green"))
 par(new = TRUE)
-plot(theta.sim, priorInform, lty = 3, axes = FALSE, xlab = '', ylab = '',
+plot(gamma.sim, priorInform1, lty = 3, axes = FALSE, xlab = '', ylab = '',
  type = 'l', col = c("blue"))
 legend('topright', lty=c(2,1,3), legend = c('LH', 'Posterior', 'Prior'),
        col = c("red", "green", "blue"), cex = 0.5)
@@ -232,7 +236,7 @@ dgalenshore <- function(theta, c, d) {
 }
 x <- seq(0.01, 3, 0.01)
 plot(x, dgalenshore(x, 1, 1), type = "l", ylab = "Galenshore Density(x)", col = "black", 
-    ylim = c(0, 5), lwd = 2)
+    ylim = c(0, 5), lwd = 2) 
 lines(x, dgalenshore(x, 1, 1.5), type = "l", col = "red", lwd = 2, lty = 2)
 lines(x, dgalenshore(x, 3, 1), type = "l", col = "blue", lwd = 2, lty = 3)
 legend("topright", c("Galenshore(1,1)", "Galenshore(1,2)", "Galenshore(3,1)"), 
@@ -240,11 +244,14 @@ legend("topright", c("Galenshore(1,1)", "Galenshore(1,2)", "Galenshore(3,1)"),
 ```
 
 \item (5) Let $Y_1, \ldots, Y_n \stackrel{iid}{\sim}$ Galenshore($a, \theta$). Find the posterior distribution of $\theta \mid y_{1:n}$ using a prior from your conjugate class. 
-You have a sample of ys, $y_{1:n}$
+You have a sample of ys, $y_{1:n}$ 
+See attached document.
 
 \item (10) Write down $$\frac{p(\theta_a \mid y_{1:n})}{p(\theta_b \mid y_{1:n})}$$ and simplify. Identify a sufficient statistic. 
 Compared the ratio of 2 different likelihood distributions, one has parameter a and one has parameter b. Normalizing constants will cancel out, some simplification.
+See Attached document.
 
-\item (5) Determine $E[\theta \mid y_{1:n}]$.
+\item (5) Determine $$E[\theta \mid y_{1:n}]$$.
+
 \item (10) Show that the form of the posterior predictive density $$p(y_{n+1} \mid y_{1:n}) =  \frac{2 y_{n+1}^{2a - 1} \Gamma(an + a + c)}{\Gamma(a)\Gamma(an + c)}
 \frac{(d^2 + \sum y_i^2)^{an + c}}{(d^2 + \sum y_i^2 + y_{n+1}^2)^{(an + a + c)}}.$$
