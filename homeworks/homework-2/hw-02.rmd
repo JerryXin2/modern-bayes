@@ -136,18 +136,26 @@ $$ p(x|\theta) =\Exp(x|\theta) = \theta\exp(-\theta x)\I(x>0). $$
 The Exponential distribution has some special properties that make it a good model for certain applications. It has been used to model the time between events (such as neuron spikes, website hits, neutrinos captured in a detector), extreme values such as maximum daily rainfall over a period of one year, or the amount of time until a product fails (lightbulbs are a standard example).
 
 Suppose you have data $x_1,\dotsc,x_n$ which you are modeling as i.i.d.\ observations from an Exponential distribution, and suppose that your prior is $\btheta\sim\Ga(a,b)$, that is,
-$$ p(\theta) = \Ga(\theta|a,b) = \frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta) \I(\theta>0). $$
+$$ p(\theta) = \Ga(\theta|a,b) = \frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta) \I(\theta>0).$$
+$$\theta^{n}\exp(-\theta \sum{x_i})\frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)$$
+Remove $\frac{b^a}{\Gamma(a)}$ because it doesn't have theta and can be treated as a constant to get:
+$$\theta^{n}\exp(-\theta \sum{x})\theta^{a-1}\exp(-b\theta)$$
+
+Simplify to get:
+$$\theta^{a + n -1}\exp(-\theta *(b + \sum{x}))$$
+$$\Ga(\theta|a+n,b + \sum{x})$$
+The posterior is a Gamma Distribution with Gamma(a + n, b + sum(x)).
 
 \begin{enumerate}
 \item (5) Derive the formula for the posterior density, $p(\theta|x_{1:n})$. Give the form of the posterior in terms of one of the most common distributions (Bernoulli, Beta, Exponential, or Gamma).
 
-$$\theta\exp(-\theta x)\frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)$$
+$$\theta^{n}\exp(-\theta \sum{x_i})\frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)$$
 Remove $\frac{b^a}{\Gamma(a)}$ because it doesn't have theta and can be treated as a constant to get:
-$$\theta\exp(-\theta x)\theta^{a-1}\exp(-b\theta)$$
+$$\theta^{n}\exp(-\theta \sum{x})\theta^{a-1}\exp(-b\theta)$$
 Simplify to get:
-$$\theta^{a}\exp(-\theta *(b + x))$$
-$$\Ga(\theta|a+1,b + x)$$
-The posterior is a Gamma Distribution with Gamma(a + 1, b + x).
+$$\theta^{a + n -1}\exp(-\theta *(b + \sum{x}))$$
+$$\Ga(\theta|a+n,b + \sum{x})$$
+The posterior is a Gamma Distribution with Gamma(a + n, b + sum(x)).
 
 \item (5) Why is the posterior distribution a \emph{proper} density or probability distribution function? \
 The posterior distribution is a proper density, or probability distribution function, because it integrates to 1, which means the area under the function adds up to 1.
@@ -171,8 +179,7 @@ posterior2 <- function(priorA, priorB, obs.data)
 {
   N <- length(obs.data2)
   x <- sum(obs.data2)
-  postA <- priorA + 1
-  ## replace x with 1?^
+  postA <- priorA + N
 	postB <- priorB + x
 	postparam <- list('postA' = postA, 
 	 'postB' = postB)
@@ -183,7 +190,7 @@ posterior2 <- function(priorA, priorB, obs.data)
 ```{r}
 informative1<- posterior2(priorA = 0.1, priorB = 1.0, obs.data = obs.data2)
 print(c(informative))
-gamma.sim <- seq(0, 2, by = 0.04)
+gamma.sim <- seq(from = 0, to = 1, length.out = 1000)
 ```
 ```{r}
 informativeDen1 <- dgamma(x = gamma.sim, shape = informative1$postA, 
@@ -191,13 +198,13 @@ informativeDen1 <- dgamma(x = gamma.sim, shape = informative1$postA,
 priorInform1 <- dgamma(x = gamma.sim, shape = 0.1, 
  rate = 1)
 
-plot(gamma.sim, informativeDen1, lty = 1, axes = FALSE, xlab = '', ylab = '',
+plot(gamma.sim, informativeDen1, lty = 1, xlab = expression(theta), ylab = 'Density',
  type = 'l', , col = c("green"))
 par(new = TRUE)
 plot(gamma.sim, priorInform1, lty = 3, axes = FALSE, xlab = '', ylab = '',
  type = 'l', col = c("blue"))
-legend('topright', lty=c(2,1,3), legend = c('LH', 'Posterior', 'Prior'),
-       col = c("red", "green", "blue"), cex = 0.5)
+legend('topright', lty=c(2,1,3), legend = c( 'Posterior', 'Prior'),
+       col = c("green", "blue"), cex = 0.5)
 ```
 
 
