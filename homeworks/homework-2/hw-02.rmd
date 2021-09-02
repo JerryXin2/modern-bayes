@@ -252,6 +252,8 @@ Compared the ratio of 2 different likelihood distributions, one has parameter a 
 See Attached document.
 
 \item (5) Determine $$E[\theta \mid y_{1:n}]$$.
+See Attached Document
 
 \item (10) Show that the form of the posterior predictive density $$p(y_{n+1} \mid y_{1:n}) =  \frac{2 y_{n+1}^{2a - 1} \Gamma(an + a + c)}{\Gamma(a)\Gamma(an + c)}
 \frac{(d^2 + \sum y_i^2)^{an + c}}{(d^2 + \sum y_i^2 + y_{n+1}^2)^{(an + a + c)}}.$$
+See Attached Document.
