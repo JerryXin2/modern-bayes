@@ -37,7 +37,7 @@ tail(obs.data)
 length(obs.data)
 ```
 
-# Task 3
+# 1(a) Task 3
 
 Write a function that takes as its inputs that data you simulated (or any data of the same type) and a sequence of $\theta$ values of length 1000 and produces Likelihood values based on the Binomial Likelihood. Plot your sequence and its corresponding Likelihood function.
 
@@ -68,7 +68,7 @@ sim.LH <- myBernLH(obs.data, theta = theta.sim)
 plot(theta.sim, sim.LH, type ="line", main = "Likelihood Profile", xlab = "Simulated Support", ylab = "Likelihood")
 ```
 
-# Task 4 (To be completed for homework)
+# 1(b) Task 4 (To be completed for homework)
 
 Write a function that takes as its inputs  prior parameters \textsf{a} and \textsf{b} for the Beta-Bernoulli model and the observed data, and produces the posterior parameters you need for the model. \textbf{Generate and print} the posterior parameters for a non-informative prior i.e. \textsf{(a,b) = (1,1)} and for an informative case \textsf{(a,b) = (3,1)}}.
 
@@ -90,8 +90,9 @@ nonInformative <- posterior(priorA = 1, priorB = 1, obs.data = obs.data)
 informative <- posterior(priorA = 3, priorB = 1, obs.data = obs.data)
 print(c(nonInformative, informative))
 ```
-
-# Task 5 (To be completed for homework)
+Non-Informative Posterior Parameters: PostA = 2, PostB = 100
+Informative Posterior Parameters: PostA = 4 PostB = 100
+# 1(c) Task 5 (To be completed for homework)
 
 Create two plots, one for the informative and one for the non-informative case to show the posterior distribution and superimpose the prior distributions on each along with the likelihood. What do you see? Remember to turn the y-axis ticks off since superimposing may make the scale non-sense.
 ```{r}
@@ -154,10 +155,10 @@ The posterior is a Gamma Distribution with Gamma(a + n, b + sum(x)).
 
 $$\theta^{n}\exp(-\theta \sum{x_i})\frac{b^a}{\Gamma(a)}\theta^{a-1}\exp(-b\theta)$$
 Remove $\frac{b^a}{\Gamma(a)}$ because it doesn't have theta and can be treated as a constant to get:
-$$\theta^{n}\exp(-\theta \sum{x})\theta^{a-1}\exp(-b\theta)$$
+$$\theta^{n}\exp(-\theta \sum{x_i})\theta^{a-1}\exp(-b\theta)$$
 Simplify to get:
-$$\theta^{a + n -1}\exp(-\theta *(b + \sum{x}))$$
-$$Ga(\theta|a+n,b + \sum{x})$$
+$$\theta^{a + n -1}\exp(-\theta *(b + \sum{x_i}))$$
+$$Ga(\theta|a+n,b + \sum{x_i})$$
 The posterior is a Gamma Distribution with Gamma(a + n, b + sum(x)).
 
 # (b) (5) Why is the posterior distribution a \emph{proper} density or probability distribution function? \
@@ -211,7 +212,7 @@ legend('topright', lty=c(2,1,3), legend = c( 'Posterior', 'Prior'),
 # (d) (5) Give a specific example of an application where an Exponential model would be reasonable. Give an example where an Exponential model would NOT be appropriate, and explain why.
 
 
-Exponential functions assuming a constant multiplicative rate of change, so a specific application would be studying a lightbulb, which has the memorylessness property of an exponential distribution there is also a constant multiplicative rate of change here, 2. An example where the exponential model would not be appropiate is modeling the risk of death, because it doesn't have the property of memorylessness, and there is not a constant multiplication rate of change here. The probability is relatively close to 0 for young people from 0-40 years old, but skyrockets when people grow older and will level out at around 1 for those who get older and older.
+Exponential functions assuming a constant multiplicative rate of change, so a specific application would be studying a lightbulb, which has the memorylessness property of an exponential distribution there is also a constant multiplicative rate of change here, 2. An example where the exponential model would not be appropiate is modeling the risk of death, because it doesn't have the property of memorylessness, and there is not a constant multiplication rate of change here. The probability is relatively close to 0 for young people from 0-40 years old, but skyrockets when people grow older and will level out at around 1 for those who get older and older. This is a logistic regression model instead.
 
 Constant Rate Assumption with the Exponential Model, time in between events. Assuming constant time in between events, memorylessness property.
 
@@ -234,11 +235,8 @@ dgalenshore <- function(theta, c, d) {
     # takes numeric vector (elements should be >0) and returns the galenshore
     # probability density at each point. Parameters a and theta should all be
     # > 0.
-    if (any(theta <= 0) || any(c <= 0) || any(d <= 0)) {
-        stop("Invalid parameters or input values. Inputs must be >0")
-    } else {
-        return((2/gamma(c)) * d^(2 * c) * exp(-d^2 * theta^2))
-    }
+    return((2/gamma(c)) * theta^(2*c-1) * d^(2 * c) * exp(-d^2 * theta^2))
+ 
 }
 x <- seq(0.01, 3, 0.01)
 plot(x, dgalenshore(x, 1, 1), type = "l", ylab = "Galenshore Density(x)", col = "black", 
