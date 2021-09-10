@@ -182,7 +182,7 @@ mean(mu_s > mu_c)
 ```
 Interpret the posterior probability that you compute above. 
 
-After sampling 10^6 times, we get 0.970831. 0.970831 means that 97.0831% of people who were told were spurters performed better than the control group.
+After sampling 10^6 times, we get 0.970831. 0.970831 means that 97.0831% of people who were told they were spurters(special group) had a higher change in IQ than the change in IQ of the control group. This also means that the probability that the spurters(special group) have a higher change in IQ than the change in IQ of the control group is 97.0831%.
 
 
 # (b) (15) Task 5 (Finish for Homework)
