@@ -25,6 +25,45 @@ library(tidyverse)
 
 1. (10 points, 5 points each) Hoff, 3.10 (Change of variables).
 
+# (a) 
+```{r}
+h = function(psi) 
+{
+  exp(psi) / (exp(psi) + 1)
+}
+dh = function(psi) 
+{
+  exp(psi) / (exp(psi) + 1)^2
+}
+dpsi = function(psi, a, b) 
+{
+  (gamma(a + b) / (gamma(a) * gamma(b))) * h(psi)^(a - 1) * (1 - h(psi))^(b - 1) * dh(psi)
+}
+```
+
+```{r}
+psi = seq(-5, 5, by = 0.05)
+density = dpsi(psi, 1, 1)
+ggplot()
+qplot(psi, density, geom = 'line')
+```
+
+# (b) 
+
+```{r}
+dpsi = function(psi, a, b) {
+  (b^a) / (gamma(a)) * exp(a * psi - b * exp(psi))
+}
+```
+
+```{r}
+psi = seq(-10, 5, by = 0.05)
+density = dpsi(psi, 1, 1)
+qplot(psi, density, geom = 'line')
+```
+
+
+
 
 2. Lab component (25 points total) Please refer to lab 4 and complete tasks
 4—5.
@@ -190,5 +229,10 @@ After sampling 10^6 times, we get 0.970831. 0.970831 means that 97.0831% of peop
 Let's return back to the prior assumptions. There are a few ways that you can check that the prior conforms with our prior beliefs. Let's go back and checks these. Draw some samples from the prior and look at them---this is probably the best general strategy. See Figure pygmalion-prior. It's also a good idea to look at sample hypothetical datasets $X_{1:n}$ drawn using these sampled parameter values. 
 
 Please replicate a plot similar to Figure pygmalion-prior and report your findings. 
+
+```{r}
+
+```
+
 
 
