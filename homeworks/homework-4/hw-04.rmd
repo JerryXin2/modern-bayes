@@ -26,6 +26,7 @@ library(tidyverse)
 1. (10 points, 5 points each) Hoff, 3.10 (Change of variables).
 
 # (a) 
+Mathematical calculuations are on seperate sheet of paper(handwritten).
 
 This is the Plot for the case a = b = 1:
 ```{r}
@@ -51,6 +52,7 @@ qplot(psi, density, geom = 'line')
 ```
 
 # (b) 
+Mathematical calculuations are on seperate sheet of paper(handwritten).
 
 This is the Plot for the case a = b = 1:
 ```{r}
@@ -137,7 +139,7 @@ xtable(rbind(prior = prior,
 
 ```{r}
 # sampling from two posteriors 
-
+set.seed(123)
 # Number of posterior simulations
 sim = 1000
 
@@ -183,6 +185,7 @@ To do this, we draw $N=10^6$ samples from each posterior:
 
 
 ```{r}
+set.seed(123)
 mp <- 24
 cp <- 8
 ap <- 4
@@ -226,7 +229,7 @@ mean(mu_s > mu_c)
 ```
 Interpret the posterior probability that you compute above. 
 
-After sampling 10^6 times, we get 0.970831. 0.970831 means that 97.0831% of people who were told they were spurters(special group) had a higher change in IQ than the change in IQ of the control group. This also means that the probability that the spurters(special group) have a higher change in IQ than the change in IQ of the control group is 97.0831%. We expect that 97.0831% of spurters(special group) to have a larger mean than the control.
+After sampling 10^6 times, we get 0.970683. 0.970683 means that 97.0683% of people who were told they were spurters(special group) had a higher change in IQ than the change in IQ of the control group. This also means that the probability that the spurters(special group) have a higher change in IQ than the change in IQ of the control group is 97.0683%. We expect that 97.0683% of spurters(special group) to have a larger mean than the control.
 
 
 # (b) (15) Task 5 (Finish for Homework)
@@ -236,6 +239,7 @@ Let's return back to the prior assumptions. There are a few ways that you can ch
 Please replicate a plot similar to Figure pygmalion-prior and report your findings. 
 
 ```{r}
+set.seed(123)
 sim = 1000
 
 mus = NULL
