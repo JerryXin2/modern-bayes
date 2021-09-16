@@ -26,6 +26,8 @@ library(tidyverse)
 1. (10 points, 5 points each) Hoff, 3.10 (Change of variables).
 
 # (a) 
+
+This is the Plot for the case a = b = 1:
 ```{r}
 h = function(psi) 
 {
@@ -37,19 +39,20 @@ dh = function(psi)
 }
 dpsi = function(psi, a, b) 
 {
-  (gamma(a + b) / (gamma(a) * gamma(b))) * h(psi)^(a - 1) * (1 - h(psi))^(b - 1) * dh(psi)
+  (gamma(a + b) / (gamma(a) * gamma(b))) * h(psi)^(a - 1) * (1 - h(psi))^
+    (b - 1) * dh(psi)
 }
 ```
 
 ```{r}
 psi = seq(-5, 5, by = 0.05)
 density = dpsi(psi, 1, 1)
-ggplot()
 qplot(psi, density, geom = 'line')
 ```
 
 # (b) 
 
+This is the Plot for the case a = b = 1:
 ```{r}
 dpsi = function(psi, a, b) {
   (b^a) / (gamma(a)) * exp(a * psi - b * exp(psi))
@@ -95,14 +98,15 @@ xLimits = seq(min(iqData$Gain) - (min(iqData$Gain) %% 5),
               by = 5)
 
 ggplot(data = iqData, aes(x = Gain, fill = Treatment, colour = I("black"))) + 
-  geom_histogram(position = "dodge", alpha = 0.5, breaks = xLimits, closed = "left")+
+  geom_histogram(position = "dodge", alpha = 0.5, 
+                 breaks = xLimits, closed = "left")+
   scale_x_continuous(breaks = xLimits, 
                      expand = c(0,0))+ 
   scale_y_continuous(expand = c(0,0), 
 breaks = seq(0, 10, by = 1))+
-  ggtitle("Histogram of Change in IQ Scores") + labs(x = "Change in IQ Score", 
-                                                     fill = "Group") + 
-                                               theme(plot.title = element_text(hjust = 0.5))  
+  ggtitle("Histogram of Change in IQ Scores") + 
+  labs(x = "Change in IQ Score", fill = "Group") + 
+  theme(plot.title = element_text(hjust = 0.5))  
 ```
 ```{r}
 prior = data.frame(m = 0, c = 1, a = 0.5, b = 50)
@@ -162,7 +166,8 @@ simDF = data.frame(lambda = c(lambdas, lambdac),
 simDF$lambda = simDF$lambda^{-0.5}
 
 # Plot the simulations
-ggplot(data = simDF, aes(x = mu, y = lambda, colour = Treatment, shape = Treatment)) +
+ggplot(data = simDF, aes(x = mu, y = lambda, 
+                         colour = Treatment, shape = Treatment)) +
   geom_point(alpha = 0.2) + 
   labs(x = expression(paste(mu, " (Mean Change in IQ Score)")),
        y = expression(paste(lambda^{-1/2}, " (Std. Dev. of Change)")))  + 
@@ -221,7 +226,7 @@ mean(mu_s > mu_c)
 ```
 Interpret the posterior probability that you compute above. 
 
-After sampling 10^6 times, we get 0.970831. 0.970831 means that 97.0831% of people who were told they were spurters(special group) had a higher change in IQ than the change in IQ of the control group. This also means that the probability that the spurters(special group) have a higher change in IQ than the change in IQ of the control group is 97.0831%.
+After sampling 10^6 times, we get 0.970831. 0.970831 means that 97.0831% of people who were told they were spurters(special group) had a higher change in IQ than the change in IQ of the control group. This also means that the probability that the spurters(special group) have a higher change in IQ than the change in IQ of the control group is 97.0831%. We expect that 97.0831% of spurters(special group) to have a larger mean than the control.
 
 
 # (b) (15) Task 5 (Finish for Homework)
@@ -231,8 +236,38 @@ Let's return back to the prior assumptions. There are a few ways that you can ch
 Please replicate a plot similar to Figure pygmalion-prior and report your findings. 
 
 ```{r}
+sim = 1000
 
+mus = NULL
+lambdas = NULL
+muc = NULL
+lambdac = NULL
+
+lambdas = rgamma(sim, shape = prior$a, rate = prior$b)
+lambdac = rgamma(sim, shape = prior$a, rate = prior$b)
+
+mus = sapply(sqrt(1/(prior$c*lambdas)),rnorm, n = 1, mean = prior$m)
+muc = sapply(sqrt(1/(prior$c*lambdac)),rnorm, n = 1, mean = prior$m)
+
+
+simDF = data.frame(lambda = c(lambdas, lambdac),
+                   mu = c(mus, muc),
+                   Treatment = rep(c("Spurters", "Controls"),
+                                   each = sim))
+
+simDF$lambda = simDF$lambda^{-0.5}
+
+
+
+ggplot(data = simDF, aes(x = mu, y = lambda, 
+                         colour = Treatment, shape = Treatment)) +
+  geom_point(alpha = 0.2) + 
+  labs(x = expression(paste(mu, " (Mean Change in IQ Score)")),
+       y = expression(paste(lambda^{-1/2}, " (Std. Dev. of Change)")))  + 
+  ggtitle("Samples(Prior)")+ 
+  theme(plot.title = element_text(hjust = 0.5))
 ```
-
+Because there seems to be a statistically significant amount of outliers, this means our prior assumption is not reasonable.
+Additionally, The graphical representation of our prior assumption confirms with our prior beliefs, specifically that there seems to be no significant relationship between  mean change in IQ score and treatment groups-which consist of the control group and spurters(special group). As for both groups there seems to be a wide range of changes in the mean IQ score,but treatment does NOT seem to affect the mean change in IQ score at all. This is because our prior beliefs are that there is no relationship between treatment and mean change in IQ score.
 
 
