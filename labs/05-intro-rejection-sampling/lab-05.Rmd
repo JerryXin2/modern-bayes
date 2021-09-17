@@ -58,6 +58,7 @@ Figure 1: Comparision of the target function and the Unif(0,1) and the Beta(2,2)
 According to the rejection sampling approach sample from f(x) using the Unif(0,1) pdf as an enveloping function. In order to do this, we write a general rejection sampling function that also allows us to plot the historams for any simulation size. Finally, our function also allows us to look at task 4 quite easily. 
 
 ```{r}
+set.seed(1)
 sim_fun <- function(f, envelope = "unif", par1 = 0, par2 = 1, n = 10^2, plot = TRUE){
   
   r_envelope <- match.fun(paste0("r", envelope))
@@ -80,19 +81,44 @@ sim_fun <- function(f, envelope = "unif", par1 = 0, par2 = 1, n = 10^2, plot = T
 ```
 
 ```{r}
+set.seed(1)
 par(mfrow = c(2,2), mar = rep(4, 4))
 unif_1 <- sim_fun(fx, envelope = "unif", par1 = 0, par2 = 1, n = 10^2) 
 unif_2 <- sim_fun(fx, envelope = "unif", par1 = 0, par2 = 1, n = 10^5)
 # ATTN: You will need to add in the Beta(2,2) densities on your own to finish task 4.
 ```
 
-Figure 2: Comparision of the output of the rejection sampling for 100 versus 100,000 simulations with uniform and beta distributions as envelope functions.
+Figure 2: Comparision of the output of the rejection sampling for 100 versus 100,000 simulations with the uniform distribution as the envelope function.
 
 ```{r}
 par(mfrow = c(1,1))
 ```
 
-# Remaining tasks
+```{r}
+set.seed(1)
+par(mfrow = c(2,2), mar = rep(4, 4))
+unif_1 <- sim_fun(fx, envelope = "beta", par1 = 2, par2 = 2, n = 10^2) 
+unif_2 <- sim_fun(fx, envelope = "beta", par1 = 2, par2 = 2, n = 10^5)
+# ATTN: You will need to add in the Beta(2,2) densities on your own to finish task 4.
+```
+Figure 3: Comparision of the output of the rejection sampling for 100 versus 100,000 simulations with the beta distribution as the envelope function.
 
-Be sure to finish any remaining tasks for homework. 
+Results:
+The acceptance ratio for sampling 100 samples from a beta(2,2) function is 0.62.
+The acceptance ratio for sampling 10^5 samples from a beta(2,2) function is 0.5.
+The acceptance ratio for sampling 100 samples from a uniform(0,1) function is 0.48.
+The acceptance ratio for sampling 10^5 samples from a uniform(0,1) function is 0.5.
+
+The histogram of sampling 100 samples from a beta(2,2) seems very roughly in the shape of a normal distribution. It seems that sampling more, in this case sampling 10^5 compared to 100, will cause the histogram of samples from a beta(2,2) to roughly approach a normal distribution.
+
+The histogram of sampling 100 samples from a uniform(0,1) seems very roughly skewed right, or a bimodal distribution. It seems that sampling more, in this case sampling 10^5 compared to 100, will cause the histogram of samples from a uniform(0,1) to roughly approach a normal distribution.
+
+# Task 5
+
+Comparing the acceptance ratios of 100 samples of the beta(2,2) and uniform(0,1) initally might indicated that the beta(2,2) function is better, since the acceptance ratio of 0.62 is greater than 0.48, which means that overall more samples got accepted. However, when expanding to 10^5 samples and looking at the bigger picture in the long run, the acceptance ratios of the beta(2,2) an the uniform(0,1) function become the same at 0.5 each, which suggests that the beta(2,2) function is no better than a uniform(0,1) function in rejection sampling. 
+
+Overall, there seems to be no statisitically signifigant difference between the beta(2,2) and the uniform(0,1) as an enveloping functions, so I would not be able to recommend one over the other since they are both roughly the same when looking at the acceptance ratio over a large quantity such as 10^5.(both have acceptance ratios of approximately 0.5)
+
+If I were trying to find an enveloping function that had an high acceptance ratio, I would personally try the Gaussian Distribution(Normal Distribution). The shape of $$f(x) = sin^2(\pi x)$$ is approximately a bellcurve shape, and it has a maximum as well as inflection points which indicate concavity. This is really similar to the Gaussian distribution, so I would try that.
+
 
