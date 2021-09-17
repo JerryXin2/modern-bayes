@@ -248,30 +248,25 @@ muc = NULL
 lambdac = NULL
 
 lambdas = rgamma(sim, shape = prior$a, rate = prior$b)
-lambdac = rgamma(sim, shape = prior$a, rate = prior$b)
 
 mus = sapply(sqrt(1/(prior$c*lambdas)),rnorm, n = 1, mean = prior$m)
-muc = sapply(sqrt(1/(prior$c*lambdac)),rnorm, n = 1, mean = prior$m)
 
 
-simDF = data.frame(lambda = c(lambdas, lambdac),
-                   mu = c(mus, muc),
-                   Treatment = rep(c("Spurters", "Controls"),
-                                   each = sim))
+simDF = data.frame(lambda = lambdas,
+                   mu = mus)
 
 simDF$lambda = simDF$lambda^{-0.5}
 
 
 
-ggplot(data = simDF, aes(x = mu, y = lambda, 
-                         colour = Treatment, shape = Treatment)) +
+ggplot(data = simDF, aes(x = mu, y = lambda)) +
   geom_point(alpha = 0.2) + 
   labs(x = expression(paste(mu, " (Mean Change in IQ Score)")),
        y = expression(paste(lambda^{-1/2}, " (Std. Dev. of Change)")))  + 
   ggtitle("Samples(Prior)")+ 
   theme(plot.title = element_text(hjust = 0.5))
 ```
-Because there seems to be a statistically significant amount of outliers, this means our prior assumption is not reasonable.
-Additionally, The graphical representation of our prior assumption confirms with our prior beliefs, specifically that there seems to be no significant relationship between  mean change in IQ score and treatment groups-which consist of the control group and spurters(special group). As for both groups there seems to be a wide range of changes in the mean IQ score,but treatment does NOT seem to affect the mean change in IQ score at all. This is because our prior beliefs are that there is no relationship between treatment and mean change in IQ score.
+Graphically the fact that the samples are centered at 0 is fine because it is reasonable to assume that there is no change in the mean. However, because there seems to be a statistically significant amount of outliers, this means our prior assumption is not reasonable.
+
 
 
