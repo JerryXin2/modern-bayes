@@ -104,8 +104,8 @@ par(mfrow = c(1,1))
 ```{r}
 set.seed(1)
 par(mfrow = c(2,2), mar = rep(4, 4))
-unif_1 <- sim_fun(fx, envelope = "beta", par1 = 2, par2 = 2, n = 10^2) 
-unif_2 <- sim_fun(fx, envelope = "beta", par1 = 2, par2 = 2, n = 10^5)
+beta_1 <- sim_fun(fx, envelope = "beta", par1 = 2, par2 = 2, n = 10^2) 
+beta_2 <- sim_fun(fx, envelope = "beta", par1 = 2, par2 = 2, n = 10^5)
 # ATTN: You will need to add in the 
 # Beta(2,2) densities on your own to finish task 4.
 ```
@@ -119,12 +119,16 @@ The acceptance ratio for sampling 10^5 samples from a uniform(0,1) function is 0
 
 The histogram of sampling 100 samples from a beta(2,2) seems very roughly in the shape of a normal distribution. It seems that sampling more, in this case sampling 10^5 compared to 100, will cause the histogram of samples from a beta(2,2) to roughly approach a normal distribution.
 
+The histograms of Beta(2,2) and unif(0,1) are approximately equal at 10^5 samples. Both seem to approach normal distributions that are symmetric and unimodal. There are no outliers for beta(2,2) or the unif(0,1) graphs for both 100 and 10^5 samples.
+
 The histogram of sampling 100 samples from a uniform(0,1) seems very roughly skewed right, or a bimodal distribution. It seems that sampling more, in this case sampling 10^5 compared to 100, will cause the histogram of samples from a uniform(0,1) to roughly approach a normal distribution.
 
 # (b) Task 5 (Finish For Homework)
 
-Comparing the acceptance ratios of 100 samples of the beta(2,2) and uniform(0,1) initally might indicated that the beta(2,2) function is better, since the acceptance ratio of 0.62 is greater than 0.48, which means that overall more samples got accepted. However, when expanding to 10^5 samples and looking at the bigger picture in the long run, the acceptance ratios of the beta(2,2) an the uniform(0,1) function become the same at 0.5 each, which suggests that the beta(2,2) function is no better than a uniform(0,1) function in rejection sampling. 
+Comparing the acceptance ratios of 100 samples of the beta(2,2) and uniform(0,1) initially might indicate that the beta(2,2) function is better, since the acceptance ratio of 0.62 is greater than 0.48, which means that overall more samples got accepted. However, when expanding to 10^5 samples and looking at the bigger picture in the long run, the acceptance ratios of the beta(2,2) an the uniform(0,1) function become the same at 0.5 each, which suggests that the beta(2,2) function is no better than a uniform(0,1) function in rejection sampling. 
+
+This is the case because the area between the unif(0,1) and the sine function is approximately equal to the area between the beta(2,2) and the sine function. This is the acceptance ratios are similar(both are approx. 0.5), and it is hard to recommend which one is better.
 
 Overall, there seems to be no statisitically signifigant difference between the beta(2,2) and the uniform(0,1) as an enveloping functions, so I would not be able to recommend one over the other since they are both roughly the same when looking at the acceptance ratio over a large quantity such as 10^5.(both have acceptance ratios of approximately 0.5)
 
-If I were trying to find an enveloping function that had an high acceptance ratio, I would personally try the Gaussian Distribution(Normal Distribution). The shape of $$f(x) = sin^2(\pi x)$$ is approximately a bellcurve shape, and it has a maximum as well as inflection points which indicate concavity. This is really similar to the Gaussian distribution, so I would try that.
+If I were trying to find an enveloping function that had an high acceptance ratio, I would personally try the Gaussian Distribution(Normal Distribution). The shape of $$f(x) = sin^2(\pi x)$$ is approximately a bellcurve shape, and it has a maximum as well as inflection points which indicate concavity. This is really similar to the Gaussian distribution, so it seems like it would have a high acceptance ratio(smaller gap between enveloping function and the target function), so I would try that.
