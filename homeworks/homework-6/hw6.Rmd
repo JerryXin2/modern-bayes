@@ -261,10 +261,22 @@ for (ind in missing.index){
 }
 plot.new()
 ```
-# Answer to Question 2(b)
+## Answer to Question 2(b)
+
 The Diagnostic Plots(Trace plots and running average plots) of 10,000 iterations both show that we have not run the sampler long enough, because the trace plots have relatively constant variance between 0 to 10,000 iterations, and the running average plots have flattened out/converged to one value and are not wavering between values, between 0 to 10,000 iterations. There seems to be no evidence that our sample diverges.
 
-# 2(c) (5 points) Give plots of the estimated density of $\theta \mid \cdots$ and $z_9 \mid \cdots$. Be sure to give brief explanations of your results and findings. (Present plots for 10,000 iterations).
+
+
+
+#2(c) (5 points) Give plots of the estimated density of $\theta \mid \cdots$ and $z_9 \mid \cdots$. Be sure to give brief explanations of your results and findings. (Present plots for 10,000 iterations).
+
+
+
+
+
+
+
+
 
 ```{r fig:density-theta2, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:density-theta}Estimated posterior density of theta"}
 # density plots
@@ -278,11 +290,11 @@ plot(density(res2[,4]), xlab = expression(z[9]),
      main = expression(paste("Density of ", z[9])))
 abline(v = mean(res2[,4]), col = "red")
 ```
-# Answer to Question 2(c) 
+## Answer to Question 2(c) 
 The Density plot of theta seems to be centered at the mean, which is represented by the vertical red line, as seems to follow the shape of a normal bellcurve.
 The Density plot of z9 seems to be skewed right. The median is the best measure of center here. The median is lower than the mean, which is represented by the vertical red line. 
 
-# 2(d) (5 points)  Finally, let's suppose that $r=10,a=1,b=100.$ Do the posterior densities in part (c) change for $\theta \mid \cdots$ and $z_9 \mid \cdots?$  Do the associated posterior densities change when $r=10, a=100,b=1?$ Please provide plots and an explanation to back up your answer.  (Use 10,000 iterations for the Gibbs sampler). 
+## 2(d) (5 points)  Finally, let's suppose that $r=10,a=1,b=100.$ Do the posterior densities in part (c) change for $\theta \mid \cdots$ and $z_9 \mid \cdots?$  Do the associated posterior densities change when $r=10, a=100,b=1?$ Please provide plots and an explanation to back up your answer.  (Use 10,000 iterations for the Gibbs sampler). 
 
 ```{r}
 a2 <- 100
@@ -320,7 +332,7 @@ plot(density(res4[,4]), xlab = expression(z[9]),
      main = expression(paste("Density of ", z[9])))
 abline(v = mean(res4[,4]), col = "red")
 ```
-# Answer to Question 2(d)  
+## Answer to Question 2(d)  
 When r = 10, a = 1, and b = 100, the Density plot of theta has the same shape(normal bell-curve, gaussian), but is instead centered at 0.6. It was centered at around 3.2 when r = 10, a = 1, b = 1.
 
 When r = 10, a = 1, and b = 100, the Density plot of z9 is more of a normal bellcurve shape when compared to the density plot when r = 10, a = 1, b = 1, but is instead centered at about 17. It was centered at around 3.2 when r = 10, a = 1, b = 1.
