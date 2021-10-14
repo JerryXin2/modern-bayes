@@ -307,8 +307,8 @@ plot(density(res2[,4]), xlab = expression(z[9]),
 abline(v = mean(res2[,4]), col = "red")
 ```
 ## Answer to Question 2(c) 
-The Density plot of theta seems to be centered at 3.3, which means it has converged and we have run the sampler long enough.
-The Density plot of z9 seems to be centered at 3.3, which means it has converged and we have run the sampler long enough.
+The Density plot of theta seems to have a posterior mean of 3.3 and is relatively smooth, which means it has converged and we have run the sampler long enough.
+The Density plot of z9 seems to have a posterior mean of 3.3 and is relatively smooth, which means it has converged and we have run the sampler long enough.
 
 The estimated true value of the theta and z9 lifespans is larger than all of the observed data, which confirms our assumption that censoring is present here. We believe that the values of our observed data are artifically low, so the model is predicting comparatively large lifespan. The red line is larger because of our censoring assumption. The data seems to be aritifically small, and 3.3 is the most likely value for the true lifespan.
 
@@ -470,13 +470,13 @@ abline(v = mean(res[,4]), col = "red")
 ## Answer to Question 2(d)  
 Yes, the posterior densities change as you are physically changing the value of b to 100, and then a to 100. This is conceptually the same as changing the prior on lifespan. Changing the prior has a statistically signifigant effect on our posterior density curve, and therefore our resulting posterior. 
 
-When r = 10, a = 1, and b = 100, the Density plot of theta is centered at around 0.6. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+When r = 10, a = 1, and b = 100, the Density plot of theta seems to have a posterior mean of around 0.6. It seems to have. a posterior mean around 3.3 when r = 10, a = 1, b = 1.
 
-When r = 10, a = 1, and b = 100, the Density plot of z9 is centered at about 17. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+When r = 10, a = 1, and b = 100, the Density plot of z9 is centered at about 17. It seems to have. a posterior mean around 3.3 when r = 10, a = 1, b = 1.
 
-When r = 10, a = 100, and b = 1, the Density plot of theta is centered at around 7.2. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+When r = 10, a = 100, and b = 1, the Density plot of theta is centered at around 7.2. It seems to have. a posterior mean around 3.3 when r = 10, a = 1, b = 1.
 
-When r = 10, a = 100, and b = 1, the Density plot of z9 is centered at around 2.25. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+When r = 10, a = 100, and b = 1, the Density plot of z9 is centered at around 2.25. It seems to have. a posterior mean around 3.3 when r = 10, a = 1, b = 1.
 
 So, our posterior does change when we change b from 1 to 100, and when we change a from 1 to 100.
 
