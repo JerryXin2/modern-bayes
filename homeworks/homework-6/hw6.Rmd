@@ -68,7 +68,7 @@ In the actual code for the Gibbs' sampler we do not sample the observed values. 
 
 You will find code below (that is also taken from class ) that will help you with the remainder of the problem.    
 
-1. (5 points) Write code to produce trace plots and running average plots for the censored values for 40 iterations. Do these diagnostic plots suggest that you have run the sampler long enough? Explain. 
+1. (5 points) Write code to produce trace plots and running average plots for the censored values for 200 iterations. Do these diagnostic plots suggest that you have run the sampler long enough? Explain. 
 
 2. (5 points) Now run the chain for 10,000 iterations  and update your diagnostic plots (traceplots and running average plots). Report your findings for both traceplots and the running average plots for $\theta$ and the censored values. Do these diagnostic plots suggest that you have run the sampler long enough? Explain. 
 
@@ -86,6 +86,7 @@ You will find code below (that is also taken from class ) that will help you wit
 ```{r}
 knitr::opts_chunk$set(cache=FALSE)
 library(xtable)
+set.seed(123)
 
 # Samples from a truncated gamma with
 # truncation (t, infty), shape a, and rate b
@@ -145,6 +146,7 @@ res <- sampleGibbs(z, c, n.iter, init.theta, init.missing, r, a, b)
 In figure \ref{fig:trace-theta} and \ref{fig:trace-z} we see traceplots for 200 iterations of the Gibbs sampler. It is difficult to tell whether or not the sampler has failed to converge, thus, we turn to running average plots. 
 
 ```{r fig:trace-theta, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:trace-theta}Traceplot of theta"}
+set.seed(123)
 plot(1:n.iter, res[,1], pch = 16, cex = .35,
      xlab = "Iteration", ylab = expression(theta), type = "l",
      main = expression(paste("Traceplot of ", theta)))
@@ -153,6 +155,7 @@ plot(1:n.iter, res[,1], pch = 16, cex = .35,
 In figures \ref{fig:run-theta} and \ref{fig:run-z} we see running average plots for 200 iterations of the Gibbs sampler, where from all of these it is clear that after 200 iterations the sampler is having mixing issues, and should be run for long to check that "it has not failed to converge."
 
 ```{r fig:trace-z, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:trace-z}Traceplot of $z_3, z_8, z_9, z_{10}, z_{12}.$"}
+set.seed(123)
 missing.index <- c(3,8,9,10,12)
 par(mfrow=c(2,3))
 for (ind in missing.index){
@@ -166,16 +169,19 @@ plot.new()
 
 ```{r}
 # get running averages
+set.seed(123)
 run.avg <- apply(res, 2, cumsum)/(1:n.iter)
 ```
 
 ```{r fig:run-theta, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:run-theta}Running average plot of theta"}
+set.seed(123)
 plot(1:n.iter, run.avg[,1], type = "l",
      xlab = "Iteration", ylab = expression(theta),
      main = expression(paste("Running Average Plot of ", theta)))
 ```
 
 ```{r fig:run-z, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:run-z}Running average plots of $z_3, z_8, z_9, z_{10}, z_{12}.$"}
+set.seed(123)
 par(mfrow=c(2,3))
 missing.index <- c(3,8,9,10,12)
 for (ind in missing.index){
@@ -190,10 +196,11 @@ plot.new()
 Figures \ref{fig:density-theta} and \ref{fig:density-z} do not provide meaniful inference at this point since the sampler has not been run long enough. 
 
 # Answer to Question 2(a) 
-The Diagnostic Plots(Trace plots and running average plots) of 200 iterations both show that we have not run the sampler long enough, because the trace plots do not have constant variance between 0 to 200 iterations, and the running average plots have not flattened out/converged to one value and are wavering between values, between 0 to 200 iterations. There is some evidence that the sample has not converged to 1 value.
+The Diagnostic Plots(Trace plots and running average plots) of 200 iterations both show that we have not run the sampler long enough, because the trace plots do not have constant variance between 0 to 200 iterations, and the running average plots have not flattened out/converged to one value and are wavering between values, between 0 to 200 iterations. It is difficult to tell whether the sample has converged or not. They seem to be beginning to converge.
 
 ```{r fig:density-theta, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:density-theta}Estimated posterior density of theta"}
 # density plots
+set.seed(123)
 plot(density(res[,1]), xlab = expression(theta), 
      main = expression(paste("Density of ", theta)))
 abline(v = mean(res[,1]), col = "red")
@@ -201,6 +208,7 @@ abline(v = mean(res[,1]), col = "red")
 
 
 ```{r fig:density-z, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:density-z}Estimated posterior density of $z_9$ (posterior mean in red)."}
+set.seed(123)
 plot(density(res[,4]), xlab = expression(z[9]),
      main = expression(paste("Density of ", z[9])))
 abline(v = mean(res[,4]), col = "red")
@@ -209,6 +217,7 @@ abline(v = mean(res[,4]), col = "red")
 # 2(b) (5 points) Now run the chain for 10,000 iterations  and update your diagnostic plots (traceplots and running average plots). Report your findings for both traceplots and the running average plots for $\theta$ and the censored values. Do these diagnostic plots suggest that you have run the sampler long enough? Explain. 
 
 ```{r}
+set.seed(123)
 n.iter2 <- 10000
 init.theta <- 1
 init.missing <- rgamma(length(c), shape = r, rate = init.theta)
@@ -219,6 +228,7 @@ res2 <- sampleGibbs(z, c, n.iter2, init.theta, init.missing, r, a, b)
 In figure \ref{fig:trace-theta} and \ref{fig:trace-z} we see traceplots for 10,000 iterations of the Gibbs sampler. It is difficult to tell whether or not the sampler has failed to converge, thus, we turn to running average plots.
 
 ```{r fig:trace-theta2, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:trace-theta}Traceplot of theta"}
+set.seed(123)
 plot(1:n.iter2, res2[,1], pch = 16, cex = .35,
      xlab = "Iteration", ylab = expression(theta), type = "l",
      main = expression(paste("Traceplot of ", theta)))
@@ -227,6 +237,7 @@ plot(1:n.iter2, res2[,1], pch = 16, cex = .35,
 In figures \ref{fig:run-theta} and \ref{fig:run-z} we see running average plots for 10,000 iterations of the Gibbs sampler, where from all of these it is clear that after 10,000 iterations the sampler is having mixing issues, and should be run for long to check that "it has not failed to converge."
 
 ```{r fig:trace-z2, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:trace-z}Traceplot of $z_3, z_8, z_9, z_{10}, z_{12}.$"}
+set.seed(123)
 missing.index <- c(3,8,9,10,12)
 par(mfrow=c(2,3))
 for (ind in missing.index){
@@ -241,16 +252,19 @@ plot.new()
 Running Average for 10,000 iterations of Gibbs Sampler.
 ```{r}
 # get running averages
+set.seed(123)
 run.avg <- apply(res2, 2, cumsum)/(1:n.iter2)
 ```
 
 ```{r fig:run-theta2, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:run-theta}Running average plot of theta"}
+set.seed(123)
 plot(1:n.iter2, run.avg[,1], type = "l",
      xlab = "Iteration", ylab = expression(theta),
      main = expression(paste("Running Average Plot of ", theta)))
 ```
 
 ```{r fig:run-z2, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:run-z}Running average plots of $z_3, z_8, z_9, z_{10}, z_{12}.$"}
+set.seed(123)
 par(mfrow=c(2,3))
 missing.index <- c(3,8,9,10,12)
 for (ind in missing.index){
@@ -263,7 +277,7 @@ plot.new()
 ```
 ## Answer to Question 2(b)
 
-The Diagnostic Plots(Trace plots and running average plots) of 10,000 iterations both show that we have not run the sampler long enough, because the trace plots have relatively constant variance between 0 to 10,000 iterations, and the running average plots have flattened out/converged to one value and are not wavering between values, between 0 to 10,000 iterations. There seems to be no evidence that our sample diverges.
+The Diagnostic Plots(Trace plots and running average plots) of 10,000 iterations both show that we have run the sampler long enough, because the trace plots have relatively constant variance between 0 to 10,000 iterations, and the running average plots have flattened out/converged to one value and are not wavering between values, between 0 to 10,000 iterations. There seems to be no evidence that our sample diverges. The running average plot of theta seems to have converged to around 3.3.
 
 
 
@@ -279,6 +293,7 @@ The Diagnostic Plots(Trace plots and running average plots) of 10,000 iterations
 
 
 ```{r fig:density-theta2, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:density-theta}Estimated posterior density of theta"}
+set.seed(123)
 # density plots
 plot(density(res2[,1]), xlab = expression(theta), 
      main = expression(paste("Density of ", theta)))
@@ -286,58 +301,182 @@ abline(v = mean(res2[,1]), col = "red")
 ```
 
 ```{r fig:density-z2, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:density-z}Estimated posterior density of $z_9$ (posterior mean in red)."}
+set.seed(123)
 plot(density(res2[,4]), xlab = expression(z[9]),
      main = expression(paste("Density of ", z[9])))
 abline(v = mean(res2[,4]), col = "red")
 ```
 ## Answer to Question 2(c) 
-The Density plot of theta seems to be centered at the mean, which is represented by the vertical red line, as seems to follow the shape of a normal bellcurve.
-The Density plot of z9 seems to be skewed right. The median is the best measure of center here. The median is lower than the mean, which is represented by the vertical red line. 
+The Density plot of theta seems to be centered at 3.3, which means it has converged and we have run the sampler long enough.
+The Density plot of z9 seems to be centered at 3.3, which means it has converged and we have run the sampler long enough.
 
-## 2(d) (5 points)  Finally, let's suppose that $r=10,a=1,b=100.$ Do the posterior densities in part (c) change for $\theta \mid \cdots$ and $z_9 \mid \cdots?$  Do the associated posterior densities change when $r=10, a=100,b=1?$ Please provide plots and an explanation to back up your answer.  (Use 10,000 iterations for the Gibbs sampler). 
+The estimated true value of the theta and z9 lifespans is larger than all of the observed data, which confirms our assumption that censoring is present here. We believe that the values of our observed data are artifically low, so the model is predicting comparatively large lifespan. The red line is larger because of our censoring assumption. The data seems to be aritifically small, and 3.3 is the most likely value for the true lifespan.
+
+## 2(d) (5 points)  Finally, let's suppose that $r=10,a=1,b=100.$ Do the posterior densities in part (c) change for $\theta \mid \cdots$ and $z_9 \mid \cdots?$  Do the associated posterior densities change when $r=10, a=100,b=1?$ Please provide plots and an explanation to back up your answer.  (Use 10,000 iterations for the Gibbs sampler).
+
+
 
 ```{r}
-a2 <- 100
-b2 <- 100
-n.iter2 <- 10000
+set.seed(123)
+knitr::opts_chunk$set(cache=FALSE)
+library(xtable)
+set.seed(123)
+
+# Samples from a truncated gamma with
+# truncation (t, infty), shape a, and rate b
+# Input: t,a,b
+# Output: truncated Gamma(a,b)
+sampleTrunGamma <- function(t, a, b){
+  # This function samples from a truncated gamma with
+  # truncation (t, infty), shape a, and rate b
+  p0 <- pgamma(t, shape = a, rate = b)
+  x <- runif(1, min = p0, max = 1)
+  y <- qgamma(x, shape = a, rate = b)
+  return(y)
+}
+
+# Gibbs sampler for censored data
+# Inputs:
+  # this function is a Gibbs sampler
+  # z is the fully observe data
+  # c is censored data
+  # n.iter is number of iterations
+  # init.theta and init.miss are initial values for sampler
+  # r,a, and b are parameters
+  # burnin is number of iterations to use as burnin
+# Output: theta, z
+sampleGibbs <- function(z, c, n.iter, init.theta, init.miss, r, a, b, burnin = 1){
+
+  z.sum <- sum(z)
+  m <- length(c)
+  n <- length(z) + m
+  miss.vals <- init.miss 
+  res <- matrix(NA, nrow = n.iter, ncol = 1 + m)
+  for (i in 1:n.iter){
+    var.sum <- z.sum + sum(miss.vals)
+    theta <- rgamma(1, shape = a + n*r, rate = b + var.sum)
+    miss.vals <- sapply(c, function(x) {sampleTrunGamma(x, r, theta)})
+    res[i,] <- c(theta, miss.vals)
+  } 
+  return(res[burnin:n.iter,])
+} 
+
+# set parameter values
+r <- 10
+a <- 1
+b <- 100
+# input data
+z <- c(3.4,2.9,1.4,3.2,1.8,4.6,2.8)
+c <- c(1.2,1.7,2.0,1.4,0.6)
+
+
+n.iter <- 10000
 init.theta <- 1
 init.missing <- rgamma(length(c), shape = r, rate = init.theta)
 # run sampler
-res3 <- sampleGibbs(z, c, n.iter2, init.theta, init.missing, r, a, b2)
-res4 <- sampleGibbs(z, c, n.iter2, init.theta, init.missing, r, a2, b)
+res <- sampleGibbs(z, c, n.iter, init.theta, init.missing, r, a, b)
 ```
 
 ```{r fig:density-theta3, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:density-theta}Estimated posterior density of theta"}
 # density plots
-plot(density(res3[,1]), xlab = expression(theta), 
+set.seed(123)
+plot(density(res[,1]), xlab = expression(theta), 
      main = expression(paste("Density of ", theta)))
-abline(v = mean(res3[,1]), col = "red")
+abline(v = mean(res[,1]), col = "red")
 ```
 
 ```{r fig:density-z3, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:density-z}Estimated posterior density of $z_9$ (posterior mean in red)."}
-plot(density(res3[,4]), xlab = expression(z[9]),
+set.seed(123)
+plot(density(res[,4]), xlab = expression(z[9]),
      main = expression(paste("Density of ", z[9])))
-abline(v = mean(res3[,4]), col = "red")
+abline(v = mean(res[,4]), col = "red")
+```
+
+```{r}
+set.seed(123)
+knitr::opts_chunk$set(cache=FALSE)
+library(xtable)
+set.seed(123)
+
+# Samples from a truncated gamma with
+# truncation (t, infty), shape a, and rate b
+# Input: t,a,b
+# Output: truncated Gamma(a,b)
+sampleTrunGamma <- function(t, a, b){
+  # This function samples from a truncated gamma with
+  # truncation (t, infty), shape a, and rate b
+  p0 <- pgamma(t, shape = a, rate = b)
+  x <- runif(1, min = p0, max = 1)
+  y <- qgamma(x, shape = a, rate = b)
+  return(y)
+}
+
+# Gibbs sampler for censored data
+# Inputs:
+  # this function is a Gibbs sampler
+  # z is the fully observe data
+  # c is censored data
+  # n.iter is number of iterations
+  # init.theta and init.miss are initial values for sampler
+  # r,a, and b are parameters
+  # burnin is number of iterations to use as burnin
+# Output: theta, z
+sampleGibbs <- function(z, c, n.iter, init.theta, init.miss, r, a, b, burnin = 1){
+
+  z.sum <- sum(z)
+  m <- length(c)
+  n <- length(z) + m
+  miss.vals <- init.miss 
+  res <- matrix(NA, nrow = n.iter, ncol = 1 + m)
+  for (i in 1:n.iter){
+    var.sum <- z.sum + sum(miss.vals)
+    theta <- rgamma(1, shape = a + n*r, rate = b + var.sum)
+    miss.vals <- sapply(c, function(x) {sampleTrunGamma(x, r, theta)})
+    res[i,] <- c(theta, miss.vals)
+  } 
+  return(res[burnin:n.iter,])
+} 
+
+# set parameter values
+r <- 10
+a <- 100
+b <- 1
+# input data
+z <- c(3.4,2.9,1.4,3.2,1.8,4.6,2.8)
+c <- c(1.2,1.7,2.0,1.4,0.6)
+
+
+n.iter <- 10000
+init.theta <- 1
+init.missing <- rgamma(length(c), shape = r, rate = init.theta)
+# run sampler
+res <- sampleGibbs(z, c, n.iter, init.theta, init.missing, r, a, b)
 ```
 
 ```{r fig:density-theta4, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:density-theta}Estimated posterior density of theta"}
 # density plots
-plot(density(res4[,1]), xlab = expression(theta), 
+set.seed(123)
+plot(density(res[,1]), xlab = expression(theta), 
      main = expression(paste("Density of ", theta)))
-abline(v = mean(res4[,1]), col = "red")
+abline(v = mean(res[,1]), col = "red")
 ```
 
 ```{r fig:density-z4, echo=FALSE, fig.width=7,fig.height=6,fig.cap="\\label{fig:density-z}Estimated posterior density of $z_9$ (posterior mean in red)."}
-plot(density(res4[,4]), xlab = expression(z[9]),
+set.seed(123)
+plot(density(res[,4]), xlab = expression(z[9]),
      main = expression(paste("Density of ", z[9])))
-abline(v = mean(res4[,4]), col = "red")
+abline(v = mean(res[,4]), col = "red")
 ```
 ## Answer to Question 2(d)  
-When r = 10, a = 1, and b = 100, the Density plot of theta has the same shape(normal bell-curve, gaussian), but is instead centered at 0.6. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+Yes, the posterior densities change as you are physically changing the value of b to 100, and then a to 100. This is conceptually the same as changing the prior on lifespan. Changing the prior has a statistically signifigant effect on our posterior density curve, and therefore our resulting posterior. 
 
-When r = 10, a = 1, and b = 100, the Density plot of z9 is more of a normal bellcurve shape when compared to the density plot when r = 10, a = 1, b = 1, but is instead centered at about 17. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+When r = 10, a = 1, and b = 100, the Density plot of theta is centered at around 0.6. It was centered at around 3.2 when r = 10, a = 1, b = 1.
 
-When r = 10, a = 100, and b = 1, the Density plot of theta has the same shape(normal bell-curve, gaussian), but is instead centered at around 7.2. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+When r = 10, a = 1, and b = 100, the Density plot of z9 is centered at about 17. It was centered at around 3.2 when r = 10, a = 1, b = 1.
 
-When r = 10, a = 100, and b = 1, the Density plot of z9 is more skewed right when ompared to the density plot when r = 10, a = 1, b = 1, but is instead centered at around 2.25. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+When r = 10, a = 100, and b = 1, the Density plot of theta is centered at around 7.2. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+
+When r = 10, a = 100, and b = 1, the Density plot of z9 is centered at around 2.25. It was centered at around 3.2 when r = 10, a = 1, b = 1.
+
+So, our posterior does change when we change b from 1 to 100, and when we change a from 1 to 100.
 
