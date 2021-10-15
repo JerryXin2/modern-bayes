@@ -277,7 +277,7 @@ plot.new()
 ```
 ## Answer to Question 2(b)
 
-The Diagnostic Plots(Trace plots and running average plots) of 10,000 iterations both show that we have run the sampler long enough, because the trace plots have relatively constant variance between 0 to 10,000 iterations, and the running average plots have flattened out/converged to one value and are not wavering between values, between 0 to 10,000 iterations. There seems to be no evidence that our sample diverges. The running average plot of theta seems to have converged to around 3.3.
+The Diagnostic Plots(Trace plots and running average plots) of 10,000 iterations both show that we have run the sampler long enough, because the trace plots have relatively constant variance between 0 to 10,000 iterations, and the running average plots have flattened out/converged to one value and are not wavering between values, between 0 to 10,000 iterations. There seems to be no evidence that our sample fails to converge. The running average plot of theta seems to have converged to around 3.3.
 
 
 
@@ -307,8 +307,8 @@ plot(density(res2[,4]), xlab = expression(z[9]),
 abline(v = mean(res2[,4]), col = "red")
 ```
 ## Answer to Question 2(c) 
-The Density plot of theta seems to have a posterior mean of 3.3 and is relatively smooth, which means it has converged and we have run the sampler long enough.
-The Density plot of z9 seems to have a posterior mean of 3.3 and is relatively smooth, which means it has converged and we have run the sampler long enough.
+The Density plot of theta seems to have a posterior mean of 3.3 and is relatively smooth, which means it has converged and we have run the sampler long enough and we have a large enough sample size.
+The Density plot of z9 seems to have a posterior mean of 3.3 and is relatively smooth, which means it has converged and we have run the sampler long enough and we have a large enough sample size.
 
 The estimated true value of the theta and z9 lifespans is larger than all of the observed data, which confirms our assumption that censoring is present here. We believe that the values of our observed data are artifically low, so the model is predicting comparatively large lifespan. The red line is larger because of our censoring assumption. The data seems to be aritifically small, and 3.3 is the most likely value for the true lifespan.
 
@@ -468,15 +468,15 @@ plot(density(res[,4]), xlab = expression(z[9]),
 abline(v = mean(res[,4]), col = "red")
 ```
 ## Answer to Question 2(d)  
-Yes, the posterior densities change as you are physically changing the value of b to 100, and then a to 100. This is conceptually the same as changing the prior on lifespan. Changing the prior has a statistically signifigant effect on our posterior density curve, and therefore our resulting posterior. 
+Yes, the posterior densities change as you are physically changing the value of b to 100, and then a to 100. This is conceptually the same as changing the prior on lifespan. Changing the prior has a statistically significant effect on our posterior density curve, and therefore our resulting posterior. 
 
-When r = 10, a = 1, and b = 100, the Density plot of theta seems to have a posterior mean of around 0.6. It seems to have. a posterior mean around 3.3 when r = 10, a = 1, b = 1.
+When r = 10, a = 1, and b = 100, the Density plot of theta seems to have a posterior mean of around 0.6. It seems to have a posterior mean around 3.3 when r = 10, a = 1, b = 1. Because the posterior mean is now around 0.6 instead of 3.3, this means that our prior significantly affects the mean and width of the posterior.
 
-When r = 10, a = 1, and b = 100, the Density plot of z9 is centered at about 17. It seems to have. a posterior mean around 3.3 when r = 10, a = 1, b = 1.
+When r = 10, a = 1, and b = 100, the Density plot of z9 is centered at about 17. It seems to have a posterior mean around 3.3 when r = 10, a = 1, b = 1. Because the posterior mean is now around 17 instead of 3.3, this means that our prior significantly affects the mean and width of the posterior.
 
-When r = 10, a = 100, and b = 1, the Density plot of theta is centered at around 7.2. It seems to have. a posterior mean around 3.3 when r = 10, a = 1, b = 1.
+When r = 10, a = 100, and b = 1, the Density plot of theta is centered at around 7.2. It seems to have a posterior mean around 3.3 when r = 10, a = 1, b = 1.Because the posterior mean is now around 7.2 instead of 3.3, this means that our prior significantly affects the mean and width of the posterior.
 
-When r = 10, a = 100, and b = 1, the Density plot of z9 is centered at around 2.25. It seems to have. a posterior mean around 3.3 when r = 10, a = 1, b = 1.
+When r = 10, a = 100, and b = 1, the Density plot of z9 is centered at around 2.25. It seems to have a posterior mean around 3.3 when r = 10, a = 1, b = 1.Because the posterior mean is now around 2.25 instead of 3.3, this means that our prior significantly affects the mean and width of the posterior.
 
-So, our posterior does change when we change b from 1 to 100, and when we change a from 1 to 100.
+So, our posterior density for theta and z9 both change when we change b from 1 to 100, and when we change a from 1 to 100.
 
