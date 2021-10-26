@@ -49,43 +49,43 @@ orangecrab = as.matrix(read.table("data/orangecrab.dat"))
 ```{r}
 set.seed(123)
 crab.mcmc = lapply(list('bluecrab' = bluecrab, 'orangecrab' = orangecrab), function(crab) {
-  p = ncol(crab)
-  n = nrow(crab)
+  c = ncol(crab)
+  r = nrow(crab)
   ybar = colMeans(crab)
   
   # Prior parameters
   
-  mu0 = ybar
-  lambda0 = s0 = cov(crab)
-  nu0 = 4
+  mu_0 = ybar
+  lambda_0 = s_0 = cov(crab)
+  nu_0 = 4
   
-  S = 10000
-  THETA = matrix(nrow = S, ncol = p)
-  SIGMA = array(dim = c(p, p, S))
+  num = 10000
+  theta_2 = matrix(nrow = num, ncol = c)
+  sigma_2 = array(dim = c(c, c, num))
   
   # Start with sigma sample
-  sigma = s0
+  sigma = s_0
   
   # Also, inv = solve to make it more readable
   inv = solve
   
-  for (s in 1:S) {
+  for (n in 1:num) {
     # Update theta
-    lambdan = inv(inv(lambda0) + n * inv(sigma))
-    mun = lambdan %*% (inv(lambda0) %*% mu0 + n * inv(sigma) %*% ybar)
-    theta = mvrnorm(n = 1, mun, lambdan)
+    lambda_n = inv(inv(lambda_0) + r * inv(sigma))
+    mu_n = lambda_n %*% (inv(lambda_0) %*% mu_0 + r * inv(sigma) %*% ybar)
+    theta = mvrnorm(n = 1, mu_n, lambda_n)
     
     # Update sigma
     resid = t(crab) - c(theta)
-    stheta = resid %*% t(resid)
-    sn = s0 + stheta
-    sigma = inv(rWishart(1, nu0 + n, inv(sn))[, , 1])
+    s_theta = resid %*% t(resid)
+    s_n = s_0 + s_theta
+    sigma = inv(rWishart(1, nu_0 + r, inv(s_n))[, , 1])
     
-    THETA[s, ] = theta
-    SIGMA[, , s] = sigma
+    theta_2[n, ] = theta
+    sigma_2[, , n] = sigma
   }
   
-  list(theta = THETA, sigma = SIGMA)
+  list(theta = theta_2, sigma = sigma_2)
 })
 ```
 
@@ -95,12 +95,14 @@ crab.mcmc = lapply(list('bluecrab' = bluecrab, 'orangecrab' = orangecrab), funct
 ```{r}
 bluecrab.df = data.frame(crab.mcmc$bluecrab$theta, species = 'blue')
 orangecrab.df = data.frame(crab.mcmc$orangecrab$theta, species = 'orange')
+
 colnames(bluecrab.df) = colnames(orangecrab.df) = c('theta1', 'theta2', 'species')
 crab.df = rbind(bluecrab.df, orangecrab.df)
 bluecrab.means = as.data.frame(t(as.matrix(colMeans(bluecrab.df[, c('theta1', 'theta2')]))))
 orangecrab.means = as.data.frame(t(as.matrix(colMeans(orangecrab.df[, c('theta1', 'theta2')]))))
 bluecrab.means$species = 'blue'
 orangecrab.means$species = 'orange'
+
 crab.means = rbind(bluecrab.means, orangecrab.means)
 
 
@@ -128,10 +130,11 @@ orangecrab.cor = apply(crab.mcmc$orangecrab$sigma, MARGIN = 3, FUN = function(co
 })
 cor.df = data.frame(species = c(rep('blue', length(bluecrab.cor)), rep('orange', length(orangecrab.cor))),
                     cor = c(bluecrab.cor, orangecrab.cor))
+
 ggplot(cor.df, aes(x = cor, fill = species)) +
   geom_density(alpha = 0.5) +
   scale_fill_manual(values = c('blue', 'orange'))
-mean(bluecrab.cor < orangecrab.cor)
+mean(orangecrab.cor > bluecrab.cor)
 ```
 The Plot of the posterior densities of correlation coefficients for orange and blue crabs shows that on average, the correlation coefficient is higher for orange crabs than blue crabs, for both measurements of theta 1 and theta 2. Through our calculation of Pr(p_blue < p_orange|yblue, yorange) = 0.9894, we can see that the probability that the correlation coefficient of orange crabs is greater than the correlation coefficient of blue crabs is 98.94%, which is significance at an alpha level of 0.05.
 
