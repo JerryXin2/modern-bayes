@@ -30,7 +30,7 @@ problems below. I recommend that you work through them as much as possible befor
 
 ## 7.3 Australian crab data: The files bluecrab.dat and orangecrab.dat contain measurements of body depth (Y1) and rear width (Y2), in millimeters,made on 50 male crabs from each of two species, blue and orange. We will model these data using a bivariate normal distribution.
 
-```{r}
+```{r load-packages, warning = F, message = F}
 library(plyr)
 library(ggplot2)
 library(dplyr)
@@ -39,21 +39,19 @@ library(reshape)
 library(tidyverse)
 library(ggrepel)
 library(MASS)
-bluecrab = as.matrix(read.table("data/bluecrab.dat"))
-orangecrab = as.matrix(read.table("data/orangecrab.dat"))
 ```
 
 
 ## a) (10 points) For each of the two species, obtain posterior distributions of the population mean theta and covariance matrix sigma as follows: Using the semiconjugate prior distributions for theta and sigma, set µ0 equal to the sample mean of the data, (caret) 0 and S0 equal to the sample covariance matrix and (caret)0 = 4. Obtain 10,000 posterior samples of theta and sigma. Note that this “prior” distribution loosely centers the parameters around empirical estimates based on the observed data (and is very similar to the unit information prior described in the previous exercise). It cannot be considered as our true prior distribution, as it was derived from the observed data. However, it can be roughly considered as the prior distribution of someone with weak but unbiased information.
 
 ```{r}
+bluecrab = as.matrix(read.table("data/bluecrab.dat"))
+orangecrab = as.matrix(read.table("data/orangecrab.dat"))
 set.seed(123)
 crab.mcmc = lapply(list('bluecrab' = bluecrab, 'orangecrab' = orangecrab), function(crab) {
   c = ncol(crab)
   r = nrow(crab)
   ybar = colMeans(crab)
-  
-  # Prior parameters
   
   mu_0 = ybar
   lambda_0 = s_0 = cov(crab)
@@ -63,19 +61,16 @@ crab.mcmc = lapply(list('bluecrab' = bluecrab, 'orangecrab' = orangecrab), funct
   theta_2 = matrix(nrow = num, ncol = c)
   sigma_2 = array(dim = c(c, c, num))
   
-  # Start with sigma sample
   sigma = s_0
   
-  # Also, inv = solve to make it more readable
   inv = solve
   
-  for (n in 1:num) {
-    # Update theta
+  for (n in 1:num) 
+    {
     lambda_n = inv(inv(lambda_0) + r * inv(sigma))
     mu_n = lambda_n %*% (inv(lambda_0) %*% mu_0 + r * inv(sigma) %*% ybar)
     theta = mvrnorm(n = 1, mu_n, lambda_n)
     
-    # Update sigma
     resid = t(crab) - c(theta)
     s_theta = resid %*% t(resid)
     s_n = s_0 + s_theta
@@ -93,6 +88,7 @@ crab.mcmc = lapply(list('bluecrab' = bluecrab, 'orangecrab' = orangecrab), funct
 ## b) (10 points) Plot values of theta = (theta1, theta2)' for each group and compare. Describe any size differences between the two groups.
 
 ```{r}
+set.seed(123)
 bluecrab.df = data.frame(crab.mcmc$bluecrab$theta, species = 'blue')
 orangecrab.df = data.frame(crab.mcmc$orangecrab$theta, species = 'orange')
 
@@ -112,16 +108,18 @@ ggplot(crab.df, aes(x = theta1, y = theta2)) +
   geom_label_repel(data = crab.means, aes(label = paste0("(", round(theta1, 2), ", ", round(theta2, 2), ")"))) +
   facet_wrap(~ species)
 ```
-Looking at the plots of theta 1 and theta 2, we can see that on average, orange crabs seem to have a larger theta 1 value than blue crabs, and on average, orange crabs seem to have a larger theta 2 value than blue crabs.
+Looking at the plots of theta 1 and theta 2, we can see that on average, orange crabs seem to have a larger theta 1 value than blue crabs(12.26 > 11.72), and on average, orange crabs seem to have a larger theta 2 value than blue crabs(15.32 > 13.35).
 ```{r}
+set.seed(123)
 mean(orangecrab.df$theta1 > bluecrab.df$theta1)
 mean(orangecrab.df$theta2 > bluecrab.df$theta2)
 ```
-Looking at the plots of theta 1 and theta 2, we can see that on average, orange crabs seem to have a larger theta 1 value than blue crabs, and on average, orange crabs seem to have a larger theta 2 value than blue crabs. This is further shown by the looking at the probability that theta 1 is greater for orange crabs than blue crabs, which is 0.8967 and the probability that theta 2 is greater for orange crabs than blue crabs, which is 0.9975. This shows that 89.67 percent of the time theta 1 is greater for orange crabs compared to blue crabs, which is not statistically significant at an alpha level of 0.05. This also shows that 99.75% of the time theta 2 is greater for orange crabs compared to blue crabs, which is significant at an alpha level of 0.05.
+Looking at the plots of theta 1 and theta 2, we can see that on average, orange crabs seem to have a larger theta 1 value than blue crabs(12.26 > 11.72), and on average, orange crabs seem to have a larger theta 2 value than blue crabs(15.32 > 13.35). This is further shown by the looking at the probability that theta 1 is greater for orange crabs than blue crabs, which is 0.8996 and the probability that theta 2 is greater for orange crabs than blue crabs, which is 0.9983. This shows that 89.96% of the time theta 1 is greater for orange crabs compared to blue crabs for our sample, which is a large majority of the time, which means on average orange crabs have a larger theta 1. This also shows that 99.83% of the time theta 2 is greater for orange crabs compared to blue crabs, which is a large majority of the time, which means on average orange crabs have a larger theta 2.
 
 ## c) (10 points) From each covariance matrix obtained from the Gibbs sampler, obtain the corresponding correlation coefficient. From these values, plot posterior densities of the correlations p_blue and p_orange for the two groups. Evaluate differences between the two species by comparing these posterior distributions. In particular, obtain an approximation to Pr(p_blue < p_orange|yblue, yorange). What do the results suggest about differences between the two populations?
 
 ```{r}
+set.seed(123)
 bluecrab.cor = apply(crab.mcmc$bluecrab$sigma, MARGIN = 3, FUN = function(covmat) {
   covmat[1, 2] / (sqrt(covmat[1, 1] * covmat[2, 2]))
 })
@@ -136,5 +134,5 @@ ggplot(cor.df, aes(x = cor, fill = species)) +
   scale_fill_manual(values = c('blue', 'orange'))
 mean(orangecrab.cor > bluecrab.cor)
 ```
-The Plot of the posterior densities of correlation coefficients for orange and blue crabs shows that on average, the correlation coefficient is higher for orange crabs than blue crabs, for both measurements of theta 1 and theta 2. Through our calculation of Pr(p_blue < p_orange|yblue, yorange) = 0.9894, we can see that the probability that the correlation coefficient of orange crabs is greater than the correlation coefficient of blue crabs is 98.94%, which is significance at an alpha level of 0.05.
+The Plot of the posterior densities of correlation coefficients are both somewhat normall distributed, and show that for orange and blue crabs on average, the correlation is higher for orange crabs than blue crabs, for both measurements of theta 1 and theta 2. Through our calculation of Pr(p_blue < p_orange|yblue, yorange) = 0.9915, we can see that the probability that the correlation of orange crabs is greater than the correlation coefficient of blue crabs is 99.15%, which is a large majority of the time, which means on average orange crabs have a larger correlation.
 
