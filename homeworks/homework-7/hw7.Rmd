@@ -45,10 +45,10 @@ library(MASS)
 ## a) (10 points) For each of the two species, obtain posterior distributions of the population mean theta and covariance matrix sigma as follows: Using the semiconjugate prior distributions for theta and sigma, set µ0 equal to the sample mean of the data, (caret) 0 and S0 equal to the sample covariance matrix and (caret)0 = 4. Obtain 10,000 posterior samples of theta and sigma. Note that this “prior” distribution loosely centers the parameters around empirical estimates based on the observed data (and is very similar to the unit information prior described in the previous exercise). It cannot be considered as our true prior distribution, as it was derived from the observed data. However, it can be roughly considered as the prior distribution of someone with weak but unbiased information.
 
 ```{r}
-bluecrab = as.matrix(read.table("data/bluecrab.dat"))
-orangecrab = as.matrix(read.table("data/orangecrab.dat"))
+blueC = as.matrix(read.table("data/bluecrab.dat"))
+orangeC = as.matrix(read.table("data/orangecrab.dat"))
 set.seed(123)
-crab.mcmc = lapply(list('bluecrab' = bluecrab, 'orangecrab' = orangecrab), function(crab) {
+crab.mcmc = lapply(list('blueC' = blueC, 'orangeC' = orangeC), function(crab) {
   c = ncol(crab)
   r = nrow(crab)
   ybar = colMeans(crab)
@@ -89,17 +89,17 @@ crab.mcmc = lapply(list('bluecrab' = bluecrab, 'orangecrab' = orangecrab), funct
 
 ```{r}
 set.seed(123)
-bluecrab.df = data.frame(crab.mcmc$bluecrab$theta, species = 'blue')
-orangecrab.df = data.frame(crab.mcmc$orangecrab$theta, species = 'orange')
+blueC.df = data.frame(crab.mcmc$blueC$theta, species = 'blue')
+orangeC.df = data.frame(crab.mcmc$orangeC$theta, species = 'orange')
 
-colnames(bluecrab.df) = colnames(orangecrab.df) = c('theta1', 'theta2', 'species')
-crab.df = rbind(bluecrab.df, orangecrab.df)
-bluecrab.means = as.data.frame(t(as.matrix(colMeans(bluecrab.df[, c('theta1', 'theta2')]))))
-orangecrab.means = as.data.frame(t(as.matrix(colMeans(orangecrab.df[, c('theta1', 'theta2')]))))
-bluecrab.means$species = 'blue'
-orangecrab.means$species = 'orange'
+colnames(blueC.df) = colnames(orangeC.df) = c('theta1', 'theta2', 'species')
+crab.df = rbind(blueC.df, orangeC.df)
+blueC.means = as.data.frame(t(as.matrix(colMeans(blueC.df[, c('theta1', 'theta2')]))))
+orangeC.means = as.data.frame(t(as.matrix(colMeans(orangeC.df[, c('theta1', 'theta2')]))))
+blueC.means$species = 'blue'
+orangeC.means$species = 'orange'
 
-crab.means = rbind(bluecrab.means, orangecrab.means)
+crab.means = rbind(blueC.means, orangeC.means)
 
 
 ggplot(crab.df, aes(x = theta1, y = theta2)) +
@@ -111,8 +111,8 @@ ggplot(crab.df, aes(x = theta1, y = theta2)) +
 Looking at the plots of theta 1 and theta 2, we can see that on average, orange crabs seem to have a larger theta 1 value than blue crabs(12.26 > 11.72), and on average, orange crabs seem to have a larger theta 2 value than blue crabs(15.32 > 13.35).
 ```{r}
 set.seed(123)
-mean(orangecrab.df$theta1 > bluecrab.df$theta1)
-mean(orangecrab.df$theta2 > bluecrab.df$theta2)
+mean(orangeC.df$theta1 > blueC.df$theta1)
+mean(orangeC.df$theta2 > blueC.df$theta2)
 ```
 Looking at the plots of theta 1 and theta 2, we can see that on average, orange crabs seem to have a larger theta 1 value than blue crabs(12.26 > 11.72), and on average, orange crabs seem to have a larger theta 2 value than blue crabs(15.32 > 13.35). This is further shown by the looking at the probability that theta 1 is greater for orange crabs than blue crabs, which is 0.8996 and the probability that theta 2 is greater for orange crabs than blue crabs, which is 0.9983. This shows that 89.96% of the time theta 1 is greater for orange crabs compared to blue crabs for our sample, which is a large majority of the time, which means on average orange crabs have a larger theta 1. This also shows that 99.83% of the time theta 2 is greater for orange crabs compared to blue crabs, which is a large majority of the time, which means on average orange crabs have a larger theta 2.
 
@@ -120,19 +120,19 @@ Looking at the plots of theta 1 and theta 2, we can see that on average, orange 
 
 ```{r}
 set.seed(123)
-bluecrab.cor = apply(crab.mcmc$bluecrab$sigma, MARGIN = 3, FUN = function(covmat) {
+blueC.cor = apply(crab.mcmc$blueC$sigma, MARGIN = 3, FUN = function(covmat) {
   covmat[1, 2] / (sqrt(covmat[1, 1] * covmat[2, 2]))
 })
-orangecrab.cor = apply(crab.mcmc$orangecrab$sigma, MARGIN = 3, FUN = function(covmat) {
+orangeC.cor = apply(crab.mcmc$orangeC$sigma, MARGIN = 3, FUN = function(covmat) {
   covmat[1, 2] / (sqrt(covmat[1, 1] * covmat[2, 2]))
 })
-cor.df = data.frame(species = c(rep('blue', length(bluecrab.cor)), rep('orange', length(orangecrab.cor))),
-                    cor = c(bluecrab.cor, orangecrab.cor))
+cor.df = data.frame(species = c(rep('blue', length(blueC.cor)), rep('orange', length(orangeC.cor))),
+                    cor = c(blueC.cor, orangeC.cor))
 
 ggplot(cor.df, aes(x = cor, fill = species)) +
   geom_density(alpha = 0.5) +
   scale_fill_manual(values = c('blue', 'orange'))
-mean(orangecrab.cor > bluecrab.cor)
+mean(orangeC.cor > blueC.cor)
 ```
 The Plot of the posterior densities of correlation coefficients are both somewhat normall distributed, and show that for orange and blue crabs on average, the correlation is higher for orange crabs than blue crabs, for both measurements of theta 1 and theta 2. Through our calculation of Pr(p_blue < p_orange|yblue, yorange) = 0.9915, we can see that the probability that the correlation of orange crabs is greater than the correlation coefficient of blue crabs is 99.15%, which is a large majority of the time, which means on average orange crabs have a larger correlation.
 
