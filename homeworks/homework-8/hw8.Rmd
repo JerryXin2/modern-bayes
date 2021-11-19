@@ -105,7 +105,7 @@ set.seed(123)
 prob_max_time = apply(swim_post_pred, MARGIN = 1, FUN = which.min)
 table(prob_max_time) / length(prob_max_time)
 ```
-Swimmer 2 has the lowest probability of having the largest recorded swim time, 0.0134(less than 0.6524, 0.3060, 0.0282). Because Swimmer 2 is the lowest probability, the coach should send Swimmer 2 to compete in the competition because she has the lowest chance to come in last between the 4 swimmers(only a 1.34% chance to have the highest recorded swim time-which is the same as coming in last).
+Swimmer 1 has the maximum probability of having the fastest swim time, 0.6524(more than 0.0134, 0.3060, 0.0282). Because Swimmer 1 has the highest probability, the coach should send Swimmer 1 to compete in the competition because she has the highest chance to come in first between the 4 swimmers(a 65.24% chance to come in first between the 4 swimmers).
 
 
 
